@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import paramiko; print\\(paramiko.__version__\\)\")",
+      "Bash(ssh-keygen -t ed25519 -f ~/.ssh/maraya_hetzner -N \"\" -C \"claude-maraya-$\\(date +%Y%m%d\\)\")",
+      "Bash(MARAYA_PASS='FiNDe991\\)\\)!' python ~/.ssh/maraya_bootstrap.py)",
+      "Bash(ssh -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new -v Findelias@91.107.235.70 exit)",
+      "Bash(ssh -o BatchMode=yes -o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new Findelias@91.107.235.70 exit)",
+      "Bash(npm --version)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --app --no-src-dir --eslint --import-alias \"@/*\" --use-npm --no-turbopack --skip-install)"
+    ]
+  }
+}
