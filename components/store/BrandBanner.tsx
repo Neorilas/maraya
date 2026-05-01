@@ -24,7 +24,11 @@ export async function BrandBanner() {
               return (
                 <span
                   key={i}
-                  className={isLast ? "block text-pink-primary" : "block"}
+                  className={
+                    isLast
+                      ? "block font-marker not-italic uppercase text-pink-primary drop-shadow-[0_3px_0_rgba(212,175,55,0.4)]"
+                      : "block"
+                  }
                 >
                   {line}
                 </span>

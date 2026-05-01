@@ -20,10 +20,11 @@
   --color-text-dark:    #1F1F1F;
   --color-text-mid:     #6B7280;
 
-  /* ---- Tipografía (utilidades: font-display, font-script, font-body) ---- */
+  /* ---- Tipografía (utilidades: font-display, font-script, font-body, font-marker) ---- */
   --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
   --font-script:  var(--font-dancing),  "Dancing Script", cursive;
   --font-body:    var(--font-nunito),   "Nunito", system-ui, sans-serif;
+  --font-marker:  var(--font-permanent-marker), "Permanent Marker", cursive;
 
   /* ---- Sombras Maraya ---- */
   --shadow-pink: 0 8px 24px rgba(244, 114, 182, 0.20);
@@ -70,9 +71,29 @@ h3 { font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.2; }
 }
 
 /* ---- Utilidades semánticas ---- */
-.font-script { font-family: var(--font-script); }
+.font-script  { font-family: var(--font-script); }
 .font-display { font-family: var(--font-display); }
-.font-body   { font-family: var(--font-body); }
+.font-body    { font-family: var(--font-body); }
+.font-marker  { font-family: var(--font-marker); letter-spacing: 0.02em; }
+
+/* Brillo dorado kitsch para títulos puntuales */
+.title-kitsch {
+  font-family: var(--font-marker);
+  background: linear-gradient(135deg, #1F1F1F 0%, #1F1F1F 70%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 0 rgba(244, 114, 182, 0.12);
+}
+
+/* Marco decorativo (marco.avif) — wrapper */
+.framed {
+  position: relative;
+  background-image: url("/marco.avif");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 
 .btn-pill {
   display: inline-flex;

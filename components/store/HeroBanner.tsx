@@ -21,7 +21,9 @@ export async function HeroBanner() {
 
           <h1 className="font-display font-black leading-[1.02] text-text-dark">
             <span className="block italic">{s.heroTitle}</span>
-            <span className="block text-pink-primary">{s.heroHighlight}</span>
+            <span className="block font-marker text-pink-primary drop-shadow-[0_3px_0_rgba(212,175,55,0.35)]">
+              {s.heroHighlight}
+            </span>
           </h1>
 
           {s.heroSubtitle && (

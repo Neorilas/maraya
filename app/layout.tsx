@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Dancing_Script, Nunito } from "next/font/google";
+import { Playfair_Display, Dancing_Script, Nunito, Permanent_Marker } from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -24,6 +24,14 @@ const nunito = Nunito({
   display: "swap",
 });
 
+// Tipografía "BY MARAYA" del logo — chunky brush handwritten
+const marker = Permanent_Marker({
+  variable: "--font-permanent-marker",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Maraya Store — Bolsos artesanales únicos",
   description:
@@ -39,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${playfair.variable} ${dancing.variable} ${nunito.variable} h-full`}
+      className={`${playfair.variable} ${dancing.variable} ${nunito.variable} ${marker.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
