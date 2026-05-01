@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  sku         String      @unique
+  name        String
+  slug        String      @unique
+  description String      @db.Text
+  price       Float
+  salePrice   Float?
+  images      String[]
+  stock       Int         @default(0)
+  isActive    Boolean     @default(true)
+  isFeatured  Boolean     @default(false)
+  category    String?
+  tags        String[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  orderNumber String      @unique
+  status      OrderStatus @default(PENDIENTE)
+
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  dni       String
+
+  address      String
+  addressLine2 String?
+  city         String
+  province     String
+  postalCode   String
+  country      String
+
+  subtotal     Float
+  shippingCost Float
+  total        Float
+
+  stripePaymentId String?
+  paidAt          DateTime?
+
+  shippingZone   String
+  trackingNumber String?
+
+  items         OrderItem[]
+  statusHistory OrderStatusHistory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  order       Order   @relation(fields: [orderId], references: [id])
+  orderId     String
+  product     Product @relation(fields: [productId], references: [id])
+  productId   String
+  productName String
+  price       Float
+  quantity    Int
+}
+
+model OrderStatusHistory {
+  id        String      @id @default(cuid())
+  order     Order       @relation(fields: [orderId], references: [id])
+  orderId   String
+  status    OrderStatus
+  note      String?
+  createdAt DateTime    @default(now())
+}
+
+model ShippingZone {
+  id       String  @id @default(cuid())
+  name     String
+  code     String  @unique
+  price    Float
+  freeFrom Float?
+  isActive Boolean @default(true)
+  days     String
+}
+
+model Settings {
+  id String @id @default("singleton")
+
+  // --- Datos de la tienda ---
+  storeName  String @default("Maraya Store")
+  storeEmail String
+  adminEmail String
+
+  // --- Stripe ---
+  stripePublicKey     String?
+  stripeSecretKey     String?
+  stripeWebhookSecret String?
+
+  // --- Redes y contacto ---
+  whatsappNumber String?
+  instagramUrl   String?
+  facebookUrl    String?
+  tiktokUrl      String?
+  twitterUrl     String?
+
+  // --- Top bar promocional ---
+  topBarText   String  @default("Envío gratis en pedidos superiores a 50 €")
+  topBarActive Boolean @default(true)
+
+  // --- Hero del home ---
+  heroEyebrow          String? @default("Nueva colección")
+  heroTitle            String  @default("Atrévete a ser")
+  heroHighlight        String  @default("ÚNICA")
+  heroSubtitle         String  @default("Bolsos artesanales con alma. Cada pieza, una historia.")
+  heroImageUrl         String?
+  heroCtaPrimaryText   String  @default("Descubre la colección")
+  heroCtaPrimaryUrl    String  @default("/bolsos")
+  heroCtaSecondaryText String? @default("Ver novedades")
+  heroCtaSecondaryUrl  String? @default("/bolsos?filter=new")
+
+  // --- Brand banner ("Brilla. Destaca. Sé Maraya.") ---
+  brandBannerEyebrow String? @default("desde 2024")
+  brandBannerTitle   String  @default("Brilla.\nDestaca.\nSé Maraya.")
+  brandBannerText    String  @default("Cada bolso pasa por las manos de nuestras artesanas. Materiales cuidados, costuras al detalle y diseños que cuentan algo de ti.")
+  brandBannerCtaText String? @default("Conoce nuestra historia")
+  brandBannerCtaUrl  String? @default("/sobre-nosotros")
+  brandBannerBadge   String? @default("Hecho con amor en España")
+
+  // --- Footer ---
+  newsletterIntro String? @default("-10% de descuento en tu primer pedido al suscribirte.")
+  clubIntro       String? @default("Acceso anticipado · Descuentos exclusivos · Regalos · Envíos gratis siempre")
+
+  // --- Legacy (no usar — pendientes de borrar tras migración) ---
+  bannerTitle    String?
+  bannerSubtitle String?
+
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+/// Tarjetas de "Nuestras colecciones" en el home. Orden por sortOrder.
+model HomeCollection {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  tag       String?
+  /// Tailwind classes tipo "from-pink-primary to-pink-deep"
+  gradient  String   @default("from-pink-primary to-pink-deep")
+  imageUrl  String?
+  href      String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// Trust badges del home (envío rápido, pago seguro, etc.).
+/// `icon` debe matchear el nombre exacto exportado por lucide-react v1.
+model TrustBadge {
+  id        String   @id @default(cuid())
+  icon      String   @default("Sparkles")
+  title     String
+  text      String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  PENDIENTE
+  PAGADO
+  EN_PREPARACION
+  ENVIADO
+  ENTREGADO
+  CANCELADO
+  REEMBOLSADO
+}
