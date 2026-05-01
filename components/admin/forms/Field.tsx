@@ -120,6 +120,10 @@ export function Toggle({
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "name">) {
   return (
     <label className="flex items-start gap-3 py-2 cursor-pointer">
+      {/* Marca al server "este toggle es parte del form" — útil para
+          updates parciales: si el checkbox no llega, el server sabe
+          que era false (vs no incluido en absoluto). */}
+      <input type="hidden" name={`__has_${name}`} value="1" />
       <input
         type="checkbox"
         name={name}
