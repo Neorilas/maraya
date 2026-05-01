@@ -9,12 +9,32 @@ export async function BrandBanner() {
 
   return (
     <section className="relative overflow-hidden bg-leopard-teal py-16 sm:py-24">
-      {/* Bandas de leopardo en arriba y abajo (referente) */}
-      <div className="absolute top-0 inset-x-0 h-12 sm:h-16 bg-leopard opacity-90" />
-      <div className="absolute bottom-0 inset-x-0 h-12 sm:h-16 bg-leopard opacity-90" />
+      {/* Banda leopardo arriba — fundida hacia el centro con máscara */}
+      <div
+        className="absolute top-0 inset-x-0 h-20 sm:h-28 bg-leopard"
+        style={{
+          maskImage:
+            "linear-gradient(to bottom, black 0%, black 35%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 0%, black 35%, transparent 100%)",
+        }}
+        aria-hidden
+      />
+      {/* Banda leopardo abajo — fundida hacia arriba */}
+      <div
+        className="absolute bottom-0 inset-x-0 h-20 sm:h-28 bg-leopard"
+        style={{
+          maskImage:
+            "linear-gradient(to top, black 0%, black 35%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to top, black 0%, black 35%, transparent 100%)",
+        }}
+        aria-hidden
+      />
 
-      <div className="absolute inset-x-0 top-12 sm:top-16 bottom-12 sm:bottom-16 bg-gradient-to-r from-teal-primary/35 via-teal-light/30 to-pink-light/40 pointer-events-none" />
-      <div className="absolute inset-x-0 top-12 sm:top-16 bottom-12 sm:bottom-16 bg-sparkles opacity-50 pointer-events-none" />
+      {/* Tinte y sparkles en el centro (sin las cuñas duras de antes) */}
+      <div className="absolute inset-0 bg-gradient-to-r from-teal-primary/25 via-teal-light/15 to-pink-light/30 pointer-events-none" />
+      <div className="absolute inset-0 bg-sparkles opacity-40 pointer-events-none" />
 
       <SparkleField
         items={[
