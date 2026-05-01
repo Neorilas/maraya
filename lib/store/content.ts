@@ -29,6 +29,22 @@ export const getActiveHomeCollections = cache(async () => {
   })
 })
 
+export const getActiveMenuItems = cache(async () => {
+  return prisma.menuItem.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+  })
+})
+
+export const getActiveProductCategories = cache(async () => {
+  return prisma.productCategory.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+  })
+})
+
 export type StoreSettings = Awaited<ReturnType<typeof getSettings>>
 export type TrustBadgeRow = Awaited<ReturnType<typeof getActiveTrustBadges>>[number]
 export type HomeCollectionRow = Awaited<ReturnType<typeof getActiveHomeCollections>>[number]
+export type MenuItemRow = Awaited<ReturnType<typeof getActiveMenuItems>>[number]
+export type ProductCategoryRow = Awaited<ReturnType<typeof getActiveProductCategories>>[number]

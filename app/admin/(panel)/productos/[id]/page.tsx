@@ -17,7 +17,14 @@ export default async function EditarProductoPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const p = await prisma.product.findUnique({ where: { id } })
+  const [p, categories] = await Promise.all([
+    prisma.product.findUnique({ where: { id } }),
+    prisma.productCategory.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: "asc" },
+      select: { slug: true, label: true },
+    }),
+  ])
   if (!p) notFound()
 
   const defaults: ProductFormDefaults = {
@@ -66,7 +73,7 @@ export default async function EditarProductoPage({
         )}
       </header>
 
-      <ProductForm defaults={defaults} mode="edit" />
+      <ProductForm defaults={defaults} mode="edit" categories={categories} />
     </div>
   )
 }

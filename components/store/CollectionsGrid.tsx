@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Tag } from "lucide-react"
 import { getActiveHomeCollections, type HomeCollectionRow } from "@/lib/store/content"
 
 export async function CollectionsGrid() {
@@ -23,7 +23,7 @@ export async function CollectionsGrid() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
           {collections.map((c) => (
             <CollectionCard key={c.id} c={c} />
           ))}
@@ -34,9 +34,11 @@ export async function CollectionsGrid() {
 }
 
 /**
- * Cada card de colección va dentro del marco `marco.avif`. La imagen/gradient
- * de la categoría queda ENMARCADA: el marco es la PNG/AVIF transparente que
- * se superpone, la cara visual está dentro con padding.
+ * Card de colección. La imagen vive DENTRO del hueco transparente del marco
+ * dorado (`marco.png`); el marco se superpone arriba con `pointer-events-none`.
+ *
+ * Aspect ratio del marco original: 600×900 = 2/3.
+ * Hueco interior aproximado: insets ~7% verticales · ~10% horizontales.
  */
 function CollectionCard({ c }: { c: HomeCollectionRow }) {
   const href = c.href ?? `/bolsos?cat=${c.slug}`
@@ -44,10 +46,10 @@ function CollectionCard({ c }: { c: HomeCollectionRow }) {
     <Link
       href={href}
       aria-label={`Ver colección ${c.name}`}
-      className="group relative aspect-[3/4] block transition-transform hover:-translate-y-1"
+      className="group relative aspect-[2/3] block transition-transform hover:-translate-y-1"
     >
-      {/* Cara visual interna (un pelín más pequeña que el marco) */}
-      <div className="absolute inset-[8%] rounded-xl overflow-hidden">
+      {/* Imagen / gradiente DENTRO del hueco del marco */}
+      <div className="absolute inset-y-[7%] inset-x-[10%] overflow-hidden rounded-sm">
         {c.imageUrl ? (
           <Image
             src={c.imageUrl}
@@ -57,37 +59,48 @@ function CollectionCard({ c }: { c: HomeCollectionRow }) {
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <>
-            <div className={`absolute inset-0 bg-gradient-to-br ${c.gradient}`} />
-            <div className="absolute inset-0 bg-leopard opacity-20 mix-blend-overlay" />
-          </>
+          <PlaceholderArt gradient={c.gradient} />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />
+
+        {/* Tinte para que el texto se lea sobre cualquier imagen */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
         <div className="absolute inset-0 flex flex-col justify-end p-3 sm:p-4 text-white">
           {c.tag && (
-            <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase opacity-90 font-bold">
+            <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase opacity-95 font-bold drop-shadow">
               {c.tag}
             </span>
           )}
-          <h3 className="font-marker !text-white mt-1 text-lg sm:text-xl uppercase leading-tight drop-shadow-md">
+          <h3 className="font-marker !text-white mt-1 text-base sm:text-lg lg:text-xl uppercase leading-tight drop-shadow-md">
             {c.name}
           </h3>
-          <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider opacity-95 group-hover:gap-2 transition-all">
+          <span className="mt-1.5 inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider opacity-95 group-hover:gap-2 transition-all">
             Ver <ArrowRight className="w-3 h-3" />
           </span>
         </div>
       </div>
 
-      {/* Marco decorativo encima (no captura clicks) */}
+      {/* Marco dorado encima — fondo y centro transparentes; rodea la imagen */}
       <Image
-        src="/marco.avif"
+        src="/marco.png"
         alt=""
         fill
         sizes="(min-width:1024px) 25vw, 50vw"
-        className="object-contain pointer-events-none drop-shadow-[0_4px_10px_rgba(212,175,55,0.35)]"
+        className="object-contain pointer-events-none drop-shadow-[0_8px_18px_rgba(212,175,55,0.45)]"
         priority={false}
       />
     </Link>
+  )
+}
+
+function PlaceholderArt({ gradient }: { gradient: string }) {
+  return (
+    <>
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
+      <div className="absolute inset-0 bg-leopard opacity-25 mix-blend-overlay" />
+      <div className="absolute inset-0 flex items-center justify-center text-white/40">
+        <Tag className="w-12 h-12" />
+      </div>
+    </>
   )
 }

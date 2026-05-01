@@ -2,19 +2,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { Search, User, ChevronDown } from "lucide-react"
 import { CartIconButton } from "@/components/store/CartIconButton"
+import { getActiveMenuItems } from "@/lib/store/content"
 
-const NAV = [
-  { label: "Inicio", href: "/" },
-  { label: "Bolsos", href: "/bolsos", chevron: true },
-  { label: "Novedades", href: "/bolsos?filter=new" },
-  { label: "Best Sellers", href: "/bolsos?filter=top" },
-  { label: "Accesorios", href: "/bolsos?cat=accesorios" },
-  { label: "Outfits", href: "/outfits" },
-  { label: "Sobre Nosotros", href: "/sobre-nosotros" },
-  { label: "Contacto", href: "/contacto" },
-]
-
-export function Header() {
+export async function Header() {
+  const menuItems = await getActiveMenuItems()
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gold/30 shadow-[0_2px_12px_rgba(244,114,182,0.08)]">
       <div className="mx-auto max-w-7xl px-4 lg:px-6">
@@ -62,22 +53,24 @@ export function Header() {
           </div>
         </div>
 
-        {/* nav */}
-        <nav className="border-t border-pink-light">
-          <ul className="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-sm font-semibold scrollbar-thin">
-            {NAV.map((item) => (
-              <li key={item.label} className="shrink-0">
-                <Link
-                  href={item.href}
-                  className="flex items-center gap-1 px-3 py-2 rounded-full uppercase tracking-wider text-xs text-text-dark hover:bg-pink-light hover:text-pink-deep transition"
-                >
-                  {item.label}
-                  {item.chevron && <ChevronDown className="w-3 h-3" />}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {/* nav (items leídos de BD vía getActiveMenuItems) */}
+        {menuItems.length > 0 && (
+          <nav className="border-t border-pink-light">
+            <ul className="flex items-center gap-1 sm:gap-2 overflow-x-auto py-2 text-sm font-semibold scrollbar-thin">
+              {menuItems.map((item) => (
+                <li key={item.id} className="shrink-0">
+                  <Link
+                    href={item.href}
+                    className="flex items-center gap-1 px-3 py-2 rounded-full uppercase tracking-wider text-xs text-text-dark hover:bg-pink-light hover:text-pink-deep transition"
+                  >
+                    {item.label}
+                    {item.hasDropdown && <ChevronDown className="w-3 h-3" />}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
       </div>
     </header>
   )

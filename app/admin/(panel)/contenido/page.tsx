@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { TrustBadgesEditor } from "@/components/admin/content/TrustBadgesEditor"
 import { CollectionsEditor } from "@/components/admin/content/CollectionsEditor"
+import { MenuItemsEditor } from "@/components/admin/content/MenuItemsEditor"
 
 export const dynamic = "force-dynamic"
 
@@ -10,9 +11,10 @@ export const metadata = {
 }
 
 export default async function ContenidoPage() {
-  const [badges, collections] = await Promise.all([
+  const [badges, collections, menuItems] = await Promise.all([
     prisma.trustBadge.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.homeCollection.findMany({ orderBy: { sortOrder: "asc" } }),
+    prisma.menuItem.findMany({ orderBy: { sortOrder: "asc" } }),
   ])
 
   return (
@@ -22,7 +24,7 @@ export default async function ContenidoPage() {
           Contenido web
         </h1>
         <p className="text-text-mid mt-1 text-sm">
-          Trust badges y colecciones del home. Para textos y CTAs ve a{" "}
+          Menú, trust badges y colecciones del home. Datos de tienda y claves Stripe en{" "}
           <a href="/admin/configuracion" className="font-bold text-pink-deep underline">
             Configuración
           </a>
@@ -30,6 +32,7 @@ export default async function ContenidoPage() {
         </p>
       </header>
 
+      <MenuItemsEditor items={menuItems} />
       <TrustBadgesEditor badges={badges} />
       <CollectionsEditor collections={collections} />
     </div>

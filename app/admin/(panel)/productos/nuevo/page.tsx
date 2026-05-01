@@ -1,6 +1,9 @@
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { prisma } from "@/lib/prisma"
 import { ProductForm, type ProductFormDefaults } from "@/components/admin/products/ProductForm"
+
+export const dynamic = "force-dynamic"
 
 export const metadata = {
   title: "Nuevo producto · Maraya Admin",
@@ -22,7 +25,13 @@ const EMPTY: ProductFormDefaults = {
   isFeatured: false,
 }
 
-export default function NuevoProductoPage() {
+export default async function NuevoProductoPage() {
+  const categories = await prisma.productCategory.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+    select: { slug: true, label: true },
+  })
+
   return (
     <div className="space-y-6 max-w-4xl">
       <Link
@@ -42,7 +51,7 @@ export default function NuevoProductoPage() {
         </p>
       </header>
 
-      <ProductForm defaults={EMPTY} mode="create" />
+      <ProductForm defaults={EMPTY} mode="create" categories={categories} />
     </div>
   )
 }

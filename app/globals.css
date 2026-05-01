@@ -86,14 +86,6 @@ h3 { font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.2; }
   text-shadow: 0 1px 0 rgba(244, 114, 182, 0.12);
 }
 
-/* Marco decorativo (marco.avif) — wrapper */
-.framed {
-  position: relative;
-  background-image: url("/marco.avif");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-}
 
 .btn-pill {
   display: inline-flex;

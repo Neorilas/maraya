@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Plus, Search } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { ProductsTable, type ProductTableRow } from "@/components/admin/products/ProductsTable"
+import { CategoriesEditor } from "@/components/admin/categories/CategoriesEditor"
 
 export const dynamic = "force-dynamic"
 
@@ -19,24 +20,27 @@ export default async function ProductosListPage({
   const q = (sp.q ?? "").trim()
   const cat = (sp.cat ?? "").trim()
 
-  const products = await prisma.product.findMany({
-    where: {
-      ...(q && {
-        OR: [
-          { name: { contains: q, mode: "insensitive" } },
-          { sku:  { contains: q, mode: "insensitive" } },
-          { slug: { contains: q, mode: "insensitive" } },
-        ],
-      }),
-      ...(cat && { category: cat }),
-    },
-    orderBy: [{ isActive: "desc" }, { createdAt: "desc" }],
-    select: {
-      id: true, sku: true, slug: true, name: true,
-      price: true, salePrice: true, stock: true,
-      isActive: true, isFeatured: true, category: true, images: true,
-    },
-  })
+  const [products, categories] = await Promise.all([
+    prisma.product.findMany({
+      where: {
+        ...(q && {
+          OR: [
+            { name: { contains: q, mode: "insensitive" } },
+            { sku:  { contains: q, mode: "insensitive" } },
+            { slug: { contains: q, mode: "insensitive" } },
+          ],
+        }),
+        ...(cat && { category: cat }),
+      },
+      orderBy: [{ isActive: "desc" }, { createdAt: "desc" }],
+      select: {
+        id: true, sku: true, slug: true, name: true,
+        price: true, salePrice: true, stock: true,
+        isActive: true, isFeatured: true, category: true, images: true,
+      },
+    }),
+    prisma.productCategory.findMany({ orderBy: { sortOrder: "asc" } }),
+  ])
 
   const rows: ProductTableRow[] = products.map((p) => ({
     ...p,
@@ -57,6 +61,8 @@ export default async function ProductosListPage({
           Nuevo producto
         </Link>
       </header>
+
+      <CategoriesEditor categories={categories} />
 
       <form className="card-maraya p-3 flex items-center gap-2">
         <Search className="w-4 h-4 text-pink-deep ml-2" />

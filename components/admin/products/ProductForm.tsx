@@ -14,15 +14,11 @@ import {
   updateProductAction,
   type ProductFormState,
 } from "@/lib/admin/products"
-import { PRODUCT_CATEGORIES } from "@/lib/admin/products-constants"
 import { slugify } from "@/lib/slug"
 
 const initial: ProductFormState = { ok: false }
 
-const CATEGORY_OPTIONS = [
-  { value: "", label: "— Sin categoría —" },
-  ...PRODUCT_CATEGORIES.map((c) => ({ value: c, label: c.replace(/-/g, " ") })),
-]
+const NO_CATEGORY = { value: "", label: "— Sin categoría —" }
 
 export type ProductFormDefaults = {
   id?: string
@@ -43,13 +39,21 @@ export type ProductFormDefaults = {
 export function ProductForm({
   defaults,
   mode,
+  categories,
 }: {
   defaults: ProductFormDefaults
   mode: "create" | "edit"
+  /** Categorías disponibles (vienen de BD desde la page padre). */
+  categories: Array<{ slug: string; label: string }>
 }) {
   const action = mode === "create" ? createProductAction : updateProductAction
   const [state, formAction, pending] = useActionState(action, initial)
   const errors = state.errors ?? {}
+
+  const categoryOptions = [
+    NO_CATEGORY,
+    ...categories.map((c) => ({ value: c.slug, label: c.label })),
+  ]
 
   // Slug auto-suggest desde name
   const [name, setName] = useState(defaults.name)
@@ -102,7 +106,7 @@ export function ProductForm({
             label="Categoría"
             name="category"
             defaultValue={defaults.category ?? ""}
-            options={CATEGORY_OPTIONS}
+            options={categoryOptions}
             error={errors.category}
           />
           <Textarea

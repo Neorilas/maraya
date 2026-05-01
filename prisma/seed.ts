@@ -5,6 +5,8 @@ import crypto from "node:crypto"
 import { SHIPPING_ZONES } from "./seeds/shipping-zones"
 import { HOME_COLLECTIONS } from "./seeds/home-collections"
 import { TRUST_BADGES } from "./seeds/trust-badges"
+import { MENU_ITEMS } from "./seeds/menu-items"
+import { PRODUCT_CATEGORIES } from "./seeds/product-categories"
 
 const prisma = new PrismaClient()
 
@@ -78,11 +80,36 @@ async function seedAdmin() {
   console.log("─".repeat(60))
 }
 
+async function seedMenuItems() {
+  const count = await prisma.menuItem.count()
+  if (count > 0) {
+    console.log(`✓ Menu items: ya hay ${count}, no se tocan`)
+    return
+  }
+  for (const m of MENU_ITEMS) {
+    await prisma.menuItem.create({ data: m })
+  }
+  console.log(`✓ Menu items: ${MENU_ITEMS.length} creados`)
+}
+
+async function seedProductCategories() {
+  for (const c of PRODUCT_CATEGORIES) {
+    await prisma.productCategory.upsert({
+      where: { slug: c.slug },
+      update: c,
+      create: c,
+    })
+  }
+  console.log(`✓ Product categories: ${PRODUCT_CATEGORIES.length} upserted`)
+}
+
 async function main() {
   await seedShippingZones()
   await seedSettings()
   await seedHomeCollections()
   await seedTrustBadges()
+  await seedMenuItems()
+  await seedProductCategories()
   await seedAdmin()
 }
 
