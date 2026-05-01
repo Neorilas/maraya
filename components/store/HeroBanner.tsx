@@ -11,12 +11,32 @@ export async function HeroBanner() {
   const s = await getSettings()
   return (
     <section className="relative overflow-hidden">
-      {/* Fondo dual-print: leopardo izquierda · panel rosa centro · zebra derecha */}
-      <div className="absolute inset-0 grid grid-cols-[15%_1fr_15%] sm:grid-cols-[12%_1fr_12%]">
-        <div className="bg-leopard" />
-        <div className="bg-gradient-to-br from-pink-light via-cream to-teal-light/60" />
-        <div className="bg-zebra-soft" />
-      </div>
+      {/* Capa 1: gradiente base que ocupa toda la sección */}
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-light via-cream to-teal-light/60" />
+
+      {/* Capa 2: estampado leopardo asomando POR LA IZQUIERDA, fundido con máscara */}
+      <div
+        className="absolute inset-0 bg-leopard"
+        style={{
+          maskImage:
+            "linear-gradient(to right, black 0%, black 14%, transparent 42%)",
+          WebkitMaskImage:
+            "linear-gradient(to right, black 0%, black 14%, transparent 42%)",
+        }}
+        aria-hidden
+      />
+
+      {/* Capa 3: estampado zebra POR LA DERECHA, fundido */}
+      <div
+        className="absolute inset-0 bg-zebra-soft"
+        style={{
+          maskImage:
+            "linear-gradient(to left, black 0%, black 14%, transparent 42%)",
+          WebkitMaskImage:
+            "linear-gradient(to left, black 0%, black 14%, transparent 42%)",
+        }}
+        aria-hidden
+      />
 
       {/* Sparkles dispersos */}
       <SparkleField
