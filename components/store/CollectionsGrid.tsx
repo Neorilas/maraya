@@ -37,8 +37,9 @@ export async function CollectionsGrid() {
  * Card de colección. La imagen vive DENTRO del hueco transparente del marco
  * dorado (`marco.png`); el marco se superpone arriba con `pointer-events-none`.
  *
- * Aspect ratio del marco original: 600×900 = 2/3.
- * Hueco interior aproximado: insets ~7% verticales · ~10% horizontales.
+ * Insets del hueco (medidos sobre el PNG real con detección de transparencia):
+ *   top 20.78% · right 23.17% · bottom 20.11% · left 24.00%
+ * Redondeados un pelín hacia adentro para no rozar la moldura dorada.
  */
 function CollectionCard({ c }: { c: HomeCollectionRow }) {
   const href = c.href ?? `/bolsos?cat=${c.slug}`
@@ -49,7 +50,10 @@ function CollectionCard({ c }: { c: HomeCollectionRow }) {
       className="group relative aspect-[2/3] block transition-transform hover:-translate-y-1"
     >
       {/* Imagen / gradiente DENTRO del hueco del marco */}
-      <div className="absolute inset-y-[7%] inset-x-[10%] overflow-hidden rounded-sm">
+      <div
+        className="absolute overflow-hidden rounded-sm"
+        style={{ top: "22%", right: "24%", bottom: "21%", left: "25%" }}
+      >
         {c.imageUrl ? (
           <Image
             src={c.imageUrl}
