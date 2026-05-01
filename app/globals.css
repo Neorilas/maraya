@@ -151,6 +151,25 @@ h3 { font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1.2; }
   background-size: 160px 160px;
 }
 
+/* ---- Zebra (rayas onduladas verticales en blanco/negro) ---- */
+.bg-zebra {
+  background-color: #fff;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='180' viewBox='0 0 100 180'><g fill='%231F1F1F'><path d='M -5 0 Q 8 30 5 60 T 0 120 Q 5 150 -2 180 L -10 180 L -10 0 Z'/><path d='M 25 -5 Q 32 25 28 55 T 30 115 Q 26 145 32 180 L 18 180 Q 22 150 18 120 T 22 60 Q 18 30 15 -5 Z'/><path d='M 55 -5 Q 60 25 55 55 T 60 115 Q 56 145 62 180 L 48 180 Q 52 150 48 120 T 52 60 Q 48 30 45 -5 Z'/><path d='M 85 -5 Q 92 25 88 55 T 90 115 Q 86 145 92 180 L 78 180 Q 82 150 78 120 T 82 60 Q 78 30 75 -5 Z'/></g></svg>");
+  background-size: 100px 180px;
+}
+.bg-zebra-soft {
+  background-color: var(--color-cream);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='180' viewBox='0 0 100 180'><g fill='%231F1F1F' opacity='0.18'><path d='M -5 0 Q 8 30 5 60 T 0 120 Q 5 150 -2 180 L -10 180 L -10 0 Z'/><path d='M 25 -5 Q 32 25 28 55 T 30 115 Q 26 145 32 180 L 18 180 Q 22 150 18 120 T 22 60 Q 18 30 15 -5 Z'/><path d='M 55 -5 Q 60 25 55 55 T 60 115 Q 56 145 62 180 L 48 180 Q 52 150 48 120 T 52 60 Q 48 30 45 -5 Z'/><path d='M 85 -5 Q 92 25 88 55 T 90 115 Q 86 145 92 180 L 78 180 Q 82 150 78 120 T 82 60 Q 78 30 75 -5 Z'/></g></svg>");
+  background-size: 100px 180px;
+}
+
+/* ---- Sparkles dispersos (chispitas blancas/doradas) ---- */
+.bg-sparkles {
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><g fill='%23FEF9C3' opacity='0.7'><path d='M 30 40 l 1 -6 l 1 6 l 6 1 l -6 1 l -1 6 l -1 -6 l -6 -1 z'/><path d='M 150 30 l 1 -8 l 1 8 l 8 1 l -8 1 l -1 8 l -1 -8 l -8 -1 z'/><path d='M 80 110 l 1 -5 l 1 5 l 5 1 l -5 1 l -1 5 l -1 -5 l -5 -1 z'/><path d='M 170 140 l 1 -7 l 1 7 l 7 1 l -7 1 l -1 7 l -1 -7 l -7 -1 z'/><path d='M 50 170 l 1 -6 l 1 6 l 6 1 l -6 1 l -1 6 l -1 -6 l -6 -1 z'/><path d='M 120 60 l 1 -4 l 1 4 l 4 1 l -4 1 l -1 4 l -1 -4 l -4 -1 z'/></g></svg>");
+  background-size: 200px 200px;
+}
+
 /* ---- Separador con corazón ---- */
 .divider-heart {
   display: flex;
