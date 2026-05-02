@@ -4,7 +4,7 @@ import { Sparkles, Heart } from "lucide-react"
 import { getSettings } from "@/lib/store/content"
 import { BagIllustration } from "@/components/store/BagIllustration"
 import { TropicalLeaf } from "@/components/store/decorations/TropicalLeaf"
-import { SparkleField } from "@/components/store/decorations/Sparkle"
+import { Sparkle } from "@/components/store/decorations/Sparkle"
 import { GoldCorners } from "@/components/store/decorations/GoldCornerOrnament"
 
 export async function HeroBanner() {
@@ -38,19 +38,6 @@ export async function HeroBanner() {
         aria-hidden
       />
 
-      {/* Sparkles dispersos */}
-      <SparkleField
-        items={[
-          { top: "8%",  left: "26%",  size: 20, opacity: 0.85 },
-          { top: "18%", left: "70%",  size: 24, opacity: 0.9 },
-          { top: "55%", left: "30%",  size: 14, opacity: 0.7, color: "#F472B6" },
-          { top: "75%", left: "65%",  size: 22, opacity: 0.85 },
-          { top: "30%", right: "8%",  size: 16, opacity: 0.8 },
-          { top: "60%", left: "12%",  size: 18, opacity: 0.7 },
-          { top: "40%", left: "50%",  size: 12, opacity: 0.6 },
-        ]}
-      />
-
       {/* Hojas tropicales asomando */}
       <TropicalLeaf
         className="absolute -left-10 top-20 hidden md:block"
@@ -81,10 +68,21 @@ export async function HeroBanner() {
           )}
 
           <h1 className="font-display font-black leading-[1.02] text-text-dark relative">
-            <span className="block italic">{s.heroTitle}</span>
+            <span className="block italic relative">
+              {s.heroTitle}
+              {/* Sparkle pequeño dorado al final del título */}
+              <span className="absolute -top-1 -right-3 sm:right-auto sm:left-full sm:ml-2">
+                <Sparkle size={16} color="#D4AF37" />
+              </span>
+            </span>
             <span className="block font-marker text-pink-primary drop-shadow-[0_3px_0_rgba(212,175,55,0.4)] relative">
               {s.heroHighlight}
+              {/* Corazón a la derecha del highlight */}
               <Heart className="hidden sm:inline-block absolute -right-10 top-1 w-7 h-7 fill-pink-primary stroke-pink-deep -rotate-12" />
+              {/* Sparkle a la izquierda del highlight */}
+              <span className="hidden sm:inline-block absolute -left-8 top-2">
+                <Sparkle size={14} color="#F472B6" />
+              </span>
             </span>
           </h1>
 
@@ -133,7 +131,16 @@ export async function HeroBanner() {
           <div className="hidden sm:flex absolute -right-2 -top-2 lg:-right-6 lg:top-4 w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-pink-primary text-white flex-col items-center justify-center font-marker uppercase text-[10px] lg:text-xs gold-border rotate-12 shadow-lg leading-tight">
             <span>Love</span>
             <span>Bags</span>
+            {/* Sparkle al borde del sticker */}
+            <span className="absolute -top-2 -right-1">
+              <Sparkle size={18} color="#FEF9C3" />
+            </span>
           </div>
+
+          {/* Sparkle suelto cerca del bolso (esquina inferior) */}
+          <span className="hidden lg:block absolute -bottom-2 -left-2 z-10">
+            <Sparkle size={20} color="#D4AF37" />
+          </span>
 
           <div className="absolute -inset-8 bg-gradient-to-tr from-pink-primary/20 via-transparent to-teal-primary/20 rounded-full blur-3xl -z-10" />
         </div>

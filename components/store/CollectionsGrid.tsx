@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Tag, Heart } from "lucide-react"
 import { getActiveHomeCollections, type HomeCollectionRow } from "@/lib/store/content"
-import { SparkleField } from "@/components/store/decorations/Sparkle"
+import { Sparkle } from "@/components/store/decorations/Sparkle"
 
 export async function CollectionsGrid() {
   const collections = await getActiveHomeCollections()
@@ -10,23 +10,26 @@ export async function CollectionsGrid() {
 
   return (
     <section className="relative bg-leopard py-14 sm:py-20">
-      <div className="absolute inset-0 bg-gradient-to-b from-cream/95 via-cream/80 to-cream/95 pointer-events-none" />
-      <div className="absolute inset-0 bg-sparkles opacity-60 pointer-events-none" />
-      <SparkleField
-        items={[
-          { top: "10%",  left: "8%",  size: 18, color: "#D4AF37", opacity: 0.7 },
-          { top: "30%",  right: "6%", size: 22, color: "#D4AF37", opacity: 0.7 },
-          { bottom: "15%", left: "10%", size: 16, color: "#F472B6", opacity: 0.6 },
-        ]}
-      />
+      {/* Veil cream para que el leopardo solo asome muy sutil */}
+      <div className="absolute inset-0 bg-gradient-to-b from-cream/96 via-cream/90 to-cream/96 pointer-events-none" />
+
       <div className="relative mx-auto max-w-7xl px-4">
         <div className="text-center mb-10 sm:mb-14">
           <span className="font-script text-2xl sm:text-3xl text-pink-primary block">
             Descubre
           </span>
-          <h2 className="font-marker !text-text-dark mt-2 text-2xl sm:text-4xl uppercase flex items-center justify-center gap-3">
+          <h2 className="font-marker !text-text-dark mt-2 text-2xl sm:text-4xl uppercase flex items-center justify-center gap-3 relative">
             <Flourish />
-            <span>Nuestras colecciones</span>
+            <span className="relative">
+              Nuestras colecciones
+              {/* Sparkles flanqueando el título — ahora SÍ integrados */}
+              <span className="absolute -top-3 -left-2 hidden sm:inline-block">
+                <Sparkle size={14} color="#D4AF37" />
+              </span>
+              <span className="absolute -bottom-2 -right-2 hidden sm:inline-block">
+                <Sparkle size={12} color="#F472B6" />
+              </span>
+            </span>
             <Flourish flip />
           </h2>
           <div className="flex items-center justify-center gap-2 mt-3">
