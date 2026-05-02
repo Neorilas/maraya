@@ -58,22 +58,23 @@ export async function HeroBanner() {
         size={180}
       />
 
-      {/* Leopardo cerámico Maraya — esquina inferior izquierda */}
+      {/* Leopardo cerámico Maraya — esquina inferior izquierda. En xs ligeramente
+          más pequeño y un toque más fuera para que no compita con el contenido. */}
       <Image
         src="/leopardo.png"
         alt=""
         width={276}
         height={503}
-        className="absolute -bottom-2 left-2 sm:left-4 lg:left-8 w-20 sm:w-32 lg:w-40 h-auto pointer-events-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.25)] z-10"
+        className="absolute -bottom-1 -left-2 sm:left-4 lg:left-8 w-16 sm:w-32 lg:w-40 h-auto pointer-events-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.25)] z-10 opacity-90 sm:opacity-100"
         priority={false}
         aria-hidden
       />
 
-      <div className="relative mx-auto max-w-7xl px-4 lg:px-8 py-12 sm:py-20 lg:py-24 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+      <div className="relative mx-auto max-w-7xl px-4 lg:px-8 py-10 sm:py-16 lg:py-24 grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
         <div className="text-center lg:text-left relative">
           {s.heroEyebrow && (
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/85 border border-gold/40 text-gold font-semibold text-xs tracking-[0.25em] uppercase mb-5">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/85 border border-gold/40 text-gold font-semibold text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.25em] uppercase mb-4 sm:mb-5">
+              <Sparkles className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               {s.heroEyebrow}
             </div>
           )}
@@ -98,15 +99,15 @@ export async function HeroBanner() {
           </h1>
 
           {s.heroSubtitle && (
-            <p className="mt-5 font-script text-2xl sm:text-3xl text-pink-deep">
+            <p className="mt-4 sm:mt-5 font-script text-xl sm:text-3xl text-pink-deep px-2 sm:px-0">
               {s.heroSubtitle}
             </p>
           )}
 
-          <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+          <div className="mt-6 sm:mt-7 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
             <Link
               href={s.heroCtaPrimaryUrl}
-              className="btn-pill btn-pink shadow-[0_8px_24px_rgba(244,114,182,0.35)]"
+              className="btn-pill btn-pink shadow-[0_8px_24px_rgba(244,114,182,0.35)] w-full sm:w-auto"
             >
               {s.heroCtaPrimaryText}
               <Heart className="w-4 h-4 fill-current" />
@@ -114,7 +115,7 @@ export async function HeroBanner() {
             {s.heroCtaSecondaryText && s.heroCtaSecondaryUrl && (
               <Link
                 href={s.heroCtaSecondaryUrl}
-                className="btn-pill bg-white text-text-dark gold-border hover:bg-gold-light"
+                className="btn-pill bg-white text-text-dark gold-border hover:bg-gold-light w-full sm:w-auto"
               >
                 {s.heroCtaSecondaryText}
               </Link>
@@ -157,8 +158,10 @@ export async function HeroBanner() {
         </div>
       </div>
 
-      {/* Esquinas doradas barrocas */}
-      <GoldCorners size={64} />
+      {/* Esquinas doradas barrocas — ocultas en xs (overlap con leopardo) */}
+      <div className="hidden sm:block">
+        <GoldCorners size={64} />
+      </div>
     </section>
   )
 }
