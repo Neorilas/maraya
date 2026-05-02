@@ -5,7 +5,12 @@ import Image from "next/image"
 import { Tag } from "lucide-react"
 import { cn } from "@/lib/cn"
 
-/** Galería con imagen principal grande y miniaturas seleccionables. */
+/**
+ * Galería con imagen principal grande y miniaturas seleccionables.
+ *
+ * Móvil: imagen grande arriba, thumbs en fila debajo (scroll horizontal).
+ * Desktop (sm+): thumbs en columna a la izquierda, imagen grande a la derecha.
+ */
 export function ProductGallery({
   images,
   alt,
@@ -25,8 +30,9 @@ export function ProductGallery({
   }
 
   return (
-    <div className="grid grid-cols-[5rem_1fr] sm:grid-cols-[6rem_1fr] gap-3">
-      <div className="flex flex-col gap-2 max-h-[28rem] overflow-y-auto">
+    <div className="flex flex-col-reverse sm:grid sm:grid-cols-[6rem_1fr] gap-3">
+      {/* Thumbs: row en móvil, column en sm+ */}
+      <div className="flex sm:flex-col gap-2 sm:max-h-[28rem] overflow-x-auto sm:overflow-x-visible sm:overflow-y-auto [&::-webkit-scrollbar]:hidden">
         {visible.map((src, i) => (
           <button
             key={src + i}
@@ -34,7 +40,7 @@ export function ProductGallery({
             onClick={() => setActive(i)}
             aria-label={`Imagen ${i + 1}`}
             className={cn(
-              "relative aspect-square rounded-xl overflow-hidden border-2 shrink-0 transition",
+              "relative w-16 h-16 sm:w-auto sm:h-auto sm:aspect-square rounded-xl overflow-hidden border-2 shrink-0 transition",
               active === i
                 ? "border-pink-primary ring-2 ring-pink-primary/30"
                 : "border-transparent opacity-70 hover:opacity-100",

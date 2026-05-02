@@ -33,26 +33,28 @@ export default async function CatalogoPage({
 
   return (
     <div className="bg-cream/40">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6 py-10 lg:py-14">
-        <header className="text-center mb-10">
-          <span className="font-script text-2xl text-pink-primary block">
+      <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-6 sm:py-10 lg:py-14">
+        <header className="text-center mb-6 sm:mb-10">
+          <span className="font-script text-xl sm:text-2xl text-pink-primary block">
             Colección
           </span>
-          <h1 className="font-display italic !text-text-dark">{heading}</h1>
-          <div className="divider-heart">
+          <h1 className="font-display italic !text-text-dark text-2xl sm:text-3xl lg:text-4xl">
+            {heading}
+          </h1>
+          <div className="divider-heart my-3 sm:my-6">
             <span aria-hidden>♡</span>
           </div>
-          <p className="text-sm text-text-mid">
+          <p className="text-xs sm:text-sm text-text-mid">
             {products.length} bolso{products.length === 1 ? "" : "s"} disponible{products.length === 1 ? "" : "s"}
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[16rem_1fr] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[16rem_1fr] gap-6 lg:gap-8">
           <CatalogFilters categories={categoryOptions} active={sp} />
 
           <div>
             {products.length === 0 ? <EmptyState q={sp.q} /> : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
                 {products.map((p) => <ProductCard key={p.id} p={p} />)}
               </div>
             )}

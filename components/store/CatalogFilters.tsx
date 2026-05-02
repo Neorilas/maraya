@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { SlidersHorizontal, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/cn"
 
 type CategoryOption = { slug: string; label: string }
@@ -22,8 +23,44 @@ const SORT_OPTIONS = [
 ]
 
 export function CatalogFilters({ categories, active }: Props) {
+  // Cuenta filtros activos (excluyendo el sort por defecto)
+  const activeCount =
+    (active.filter ? 1 : 0) +
+    (active.cat ? 1 : 0) +
+    (active.sort && active.sort !== "newest" ? 1 : 0)
+
   return (
-    <aside className="space-y-6">
+    <>
+      {/* Móvil: filtros colapsables como <details> */}
+      <details className="lg:hidden card-maraya">
+        <summary className="px-4 py-3 cursor-pointer flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden">
+          <span className="flex items-center gap-2 font-semibold text-text-dark">
+            <SlidersHorizontal className="w-4 h-4 text-pink-deep" />
+            Filtros y orden
+            {activeCount > 0 && (
+              <span className="ml-1 px-2 py-0.5 rounded-full bg-pink-primary text-white text-[10px] font-bold">
+                {activeCount}
+              </span>
+            )}
+          </span>
+          <ChevronDown className="w-4 h-4 text-text-mid transition-transform group-open:rotate-180" />
+        </summary>
+        <div className="px-4 pb-4 pt-2 border-t border-pink-light space-y-5">
+          <FiltersBody categories={categories} active={active} />
+        </div>
+      </details>
+
+      {/* Desktop: sidebar fijo */}
+      <aside className="hidden lg:block space-y-6">
+        <FiltersBody categories={categories} active={active} />
+      </aside>
+    </>
+  )
+}
+
+function FiltersBody({ categories, active }: Props) {
+  return (
+    <>
       <FilterGroup title="Mostrar">
         {QUICK_FILTERS.map((f) => (
           <FilterChip
@@ -71,7 +108,7 @@ export function CatalogFilters({ categories, active }: Props) {
           ))}
         </div>
       </FilterGroup>
-    </aside>
+    </>
   )
 }
 

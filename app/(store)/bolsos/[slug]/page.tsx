@@ -52,27 +52,27 @@ export default async function ProductDetailPage({
 
   return (
     <div className="bg-cream/40">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6 py-8 lg:py-12">
+      <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-5 sm:py-8 lg:py-12">
         <Breadcrumbs name={p.name} category={p.category} />
 
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <div className="mt-4 sm:mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           <ProductGallery images={p.images} alt={p.name} />
 
-          <div className="space-y-5">
+          <div className="space-y-4 sm:space-y-5">
             <header>
               <p className="text-xs font-mono text-text-mid">SKU {p.sku}</p>
-              <h1 className="font-display italic !text-text-dark mt-1">
+              <h1 className="font-display italic !text-text-dark mt-1 text-2xl sm:text-3xl lg:text-4xl">
                 {p.name}
               </h1>
             </header>
 
             <PriceBlock price={p.price} salePrice={p.salePrice} />
 
-            <p className="text-text-dark leading-relaxed whitespace-pre-line">
+            <p className="text-text-dark leading-relaxed whitespace-pre-line text-sm sm:text-base">
               {p.description}
             </p>
 
-            <div className="border-t border-pink-light pt-5 space-y-4">
+            <div className="border-t border-pink-light pt-4 sm:pt-5 space-y-4">
               {p.stock > 0 ? (
                 <AddToCartButton
                   full
@@ -99,14 +99,14 @@ export default async function ProductDetailPage({
         </div>
 
         {related.length > 0 && (
-          <section className="mt-16">
-            <h2 className="font-display italic !text-text-dark text-2xl text-center">
+          <section className="mt-12 sm:mt-16">
+            <h2 className="font-display italic !text-text-dark text-xl sm:text-2xl text-center">
               También te puede gustar
             </h2>
-            <div className="divider-heart">
+            <div className="divider-heart my-4 sm:my-6">
               <span aria-hidden>♡</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
               {related.map((r) => (
                 <ProductCard
                   key={r.id}
