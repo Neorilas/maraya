@@ -58,6 +58,17 @@ export async function HeroBanner() {
         size={180}
       />
 
+      {/* Leopardo cerámico Maraya — esquina inferior izquierda */}
+      <Image
+        src="/leopardo.png"
+        alt=""
+        width={276}
+        height={503}
+        className="absolute -bottom-2 left-2 sm:left-4 lg:left-8 w-20 sm:w-32 lg:w-40 h-auto pointer-events-none drop-shadow-[0_8px_16px_rgba(0,0,0,0.25)] z-10"
+        priority={false}
+        aria-hidden
+      />
+
       <div className="relative mx-auto max-w-7xl px-4 lg:px-8 py-12 sm:py-20 lg:py-24 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         <div className="text-center lg:text-left relative">
           {s.heroEyebrow && (

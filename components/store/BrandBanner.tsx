@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Heart } from "lucide-react"
 import { getSettings } from "@/lib/store/content"
 import { Sparkle } from "@/components/store/decorations/Sparkle"
@@ -34,6 +35,17 @@ export async function BrandBanner() {
 
       {/* Tinte central — sin sparkles dispersos para que la sección respire */}
       <div className="absolute inset-0 bg-gradient-to-r from-teal-primary/25 via-teal-light/15 to-pink-light/30 pointer-events-none" />
+
+      {/* Leopardo cerámico Maraya — esquina inferior derecha de la sección */}
+      <Image
+        src="/leopardo.png"
+        alt=""
+        width={276}
+        height={503}
+        className="absolute right-0 bottom-0 sm:right-4 lg:right-8 w-24 sm:w-36 lg:w-48 h-auto pointer-events-none drop-shadow-[0_10px_18px_rgba(0,0,0,0.3)] z-10"
+        priority={false}
+        aria-hidden
+      />
 
       <div className="relative mx-auto max-w-6xl px-6 grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
         <div className="text-center lg:text-left">
