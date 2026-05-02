@@ -28,10 +28,10 @@ export function CheckoutSummary({
   const total = subtotal + shippingCost
 
   return (
-    <aside className="card-maraya gold-border p-5 h-fit lg:sticky lg:top-20 space-y-4">
-      <h2 className="font-display !text-text-dark text-lg">Tu pedido</h2>
+    <aside className="card-maraya gold-border p-4 sm:p-5 h-fit lg:sticky lg:top-20 space-y-3 sm:space-y-4">
+      <h2 className="font-display !text-text-dark text-base sm:text-lg">Tu pedido</h2>
 
-      <ul className="space-y-3 max-h-72 overflow-y-auto pr-1">
+      <ul className="space-y-2 sm:space-y-3 max-h-56 sm:max-h-72 overflow-y-auto pr-1">
         {items.map((it) => (
           <li key={it.productId} className="flex gap-3 items-center">
             <div className="relative w-12 h-12 rounded-lg bg-pink-light overflow-hidden gold-border shrink-0">

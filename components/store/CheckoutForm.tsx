@@ -198,8 +198,12 @@ function CheckoutFormInner() {
   }
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-8">
-      <div className="space-y-6">
+    <form
+      ref={formRef}
+      onSubmit={onSubmit}
+      className="flex flex-col-reverse lg:grid lg:grid-cols-[1fr_22rem] gap-6 lg:gap-8"
+    >
+      <div className="space-y-5 sm:space-y-6">
         <Section title="Datos personales">
           <Input label="Nombre"     name="firstName" required error={errors.firstName} />
           <Input label="Apellidos"  name="lastName"  required error={errors.lastName} />
@@ -249,10 +253,10 @@ function CheckoutFormInner() {
           </div>
         )}
 
-        <div className="sticky bottom-0 -mx-4 sm:-mx-0 px-4 sm:px-0 py-3 bg-cream/95 backdrop-blur border-t border-pink-light flex items-center justify-between gap-3 z-20">
+        <div className="sticky bottom-0 -mx-3 sm:-mx-0 px-3 sm:px-0 py-3 bg-cream/95 backdrop-blur border-t border-pink-light flex flex-col-reverse sm:flex-row items-stretch sm:items-center sm:justify-between gap-2 sm:gap-3 z-20">
           <Link
             href="/carrito"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-text-mid hover:text-pink-deep transition"
+            className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-text-mid hover:text-pink-deep transition"
           >
             <ArrowLeft className="w-4 h-4" />
             Volver al carrito
@@ -260,7 +264,7 @@ function CheckoutFormInner() {
           <button
             type="submit"
             disabled={submitting || shipping.status !== "ok" || !stripe || !elements}
-            className="btn-pill btn-pink disabled:opacity-60"
+            className="btn-pill btn-pink disabled:opacity-60 w-full sm:w-auto justify-center"
           >
             {submitting ? (
               <>
@@ -293,9 +297,9 @@ function Section({
 }) {
   const grid = cols === 2 ? "sm:grid-cols-2" : "grid-cols-1"
   return (
-    <section className="card-maraya p-5 sm:p-6 space-y-4">
-      <h2 className="font-display !text-text-dark text-lg">{title}</h2>
-      <div className={`grid grid-cols-1 ${grid} gap-4`}>{children}</div>
+    <section className="card-maraya p-4 sm:p-5 lg:p-6 space-y-3 sm:space-y-4">
+      <h2 className="font-display !text-text-dark text-base sm:text-lg">{title}</h2>
+      <div className={`grid grid-cols-1 ${grid} gap-3 sm:gap-4`}>{children}</div>
     </section>
   )
 }

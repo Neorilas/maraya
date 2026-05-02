@@ -28,13 +28,13 @@ export function CartView() {
   if (items.length === 0) return <EmptyCart />
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-6 lg:gap-8">
       <ul className="space-y-3">
         {items.map((it) => (
-          <li key={it.productId} className="card-maraya p-4 flex gap-4 items-center">
+          <li key={it.productId} className="card-maraya p-3 sm:p-4 flex gap-3 sm:gap-4 items-center">
             <Link
               href={`/bolsos/${it.slug}`}
-              className="relative w-20 h-20 rounded-xl overflow-hidden bg-pink-light shrink-0 gold-border"
+              className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-pink-light shrink-0 gold-border"
             >
               {it.image ? (
                 <Image src={it.image} alt={it.name} fill sizes="80px" className="object-cover" />
@@ -48,20 +48,20 @@ export function CartView() {
             <div className="flex-1 min-w-0">
               <Link
                 href={`/bolsos/${it.slug}`}
-                className="font-display !text-text-dark text-base hover:text-pink-deep transition line-clamp-1 block"
+                className="font-display !text-text-dark text-sm sm:text-base hover:text-pink-deep transition line-clamp-1 block"
               >
                 {it.name}
               </Link>
-              <div className="text-sm text-text-mid mt-0.5">
+              <div className="text-xs sm:text-sm text-text-mid mt-0.5">
                 {FORMAT_EUR.format(it.unitPrice)} c/u
               </div>
 
-              <div className="mt-2 flex items-center gap-3 flex-wrap">
+              <div className="mt-2 flex items-center gap-2 sm:gap-3 flex-wrap">
                 <div className="inline-flex items-center bg-white border-2 border-pink-light rounded-full overflow-hidden">
                   <QtyBtn onClick={() => setQuantity(it.productId, it.quantity - 1)}>
                     <Minus className="w-3.5 h-3.5" />
                   </QtyBtn>
-                  <span className="w-8 text-center font-bold text-text-dark text-sm">
+                  <span className="w-7 sm:w-8 text-center font-bold text-text-dark text-sm">
                     {it.quantity}
                   </span>
                   <QtyBtn
@@ -74,16 +74,17 @@ export function CartView() {
                 <button
                   type="button"
                   onClick={() => removeItem(it.productId)}
+                  aria-label="Quitar del carrito"
                   className="text-xs font-semibold text-red-600 hover:text-red-700 transition flex items-center gap-1"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  Quitar
+                  <span className="hidden sm:inline">Quitar</span>
                 </button>
               </div>
             </div>
 
             <div className="text-right shrink-0">
-              <div className="font-bold text-text-dark">
+              <div className="font-bold text-text-dark text-sm sm:text-base">
                 {FORMAT_EUR.format(it.unitPrice * it.quantity)}
               </div>
             </div>
