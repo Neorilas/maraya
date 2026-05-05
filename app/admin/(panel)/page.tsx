@@ -22,17 +22,17 @@ export default async function DashboardPage() {
   const stats = await getDashboardStats()
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <header>
-        <h1 className="font-display italic text-3xl !text-text-dark">
+        <h1 className="font-display italic text-2xl sm:text-3xl !text-text-dark">
           Dashboard
         </h1>
-        <p className="text-text-mid mt-1 text-sm">
+        <p className="text-text-mid mt-1 text-xs sm:text-sm">
           Resumen del estado de la tienda en tiempo real.
         </p>
       </header>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <StatsCard
           label="Pedidos hoy"
           value={stats.ordersToday}

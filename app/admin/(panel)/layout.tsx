@@ -22,7 +22,9 @@ export default async function PanelLayout({
       <AdminTopBar
         user={{ name: session.user.name, email: session.user.email }}
       />
-      {children}
+      <main className="flex-1 px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        {children}
+      </main>
     </AdminShell>
   )
 }

@@ -41,27 +41,117 @@ export function ProductsTable({ rows }: { rows: ProductTableRow[] }) {
   }
 
   return (
-    <div className="card-maraya overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-xs uppercase tracking-wider text-text-mid bg-cream/50">
-              <th className="text-left px-4 py-2.5 font-bold">Producto</th>
-              <th className="text-left px-4 py-2.5 font-bold">SKU</th>
-              <th className="text-right px-4 py-2.5 font-bold">Precio</th>
-              <th className="text-right px-4 py-2.5 font-bold">Stock</th>
-              <th className="text-center px-4 py-2.5 font-bold">Estado</th>
-              <th className="text-right px-4 py-2.5 font-bold">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p) => (
-              <Row key={p.id} p={p} />
-            ))}
-          </tbody>
-        </table>
+    <>
+      {/* Mobile: cards apiladas con info esencial */}
+      <ul className="md:hidden space-y-2">
+        {rows.map((p) => (
+          <li key={p.id}>
+            <MobileProductCard p={p} />
+          </li>
+        ))}
+      </ul>
+
+      {/* Desktop: tabla */}
+      <div className="hidden md:block card-maraya overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-xs uppercase tracking-wider text-text-mid bg-cream/50">
+                <th className="text-left px-4 py-2.5 font-bold">Producto</th>
+                <th className="text-left px-4 py-2.5 font-bold">SKU</th>
+                <th className="text-right px-4 py-2.5 font-bold">Precio</th>
+                <th className="text-right px-4 py-2.5 font-bold">Stock</th>
+                <th className="text-center px-4 py-2.5 font-bold">Estado</th>
+                <th className="text-right px-4 py-2.5 font-bold">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((p) => (
+                <Row key={p.id} p={p} />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
+  )
+}
+
+function MobileProductCard({ p }: { p: ProductTableRow }) {
+  return (
+    <article className="card-maraya p-3 flex items-center gap-3">
+      <Link
+        href={`/admin/productos/${p.id}`}
+        className="relative w-14 h-14 rounded-lg bg-pink-light overflow-hidden shrink-0 gold-border"
+      >
+        {p.primaryImage ? (
+          <Image src={p.primaryImage} alt={p.name} fill sizes="56px" className="object-cover" />
+        ) : (
+          <span className="w-full h-full flex items-center justify-center text-pink-deep">
+            <Tag className="w-4 h-4" />
+          </span>
+        )}
+      </Link>
+
+      <div className="min-w-0 flex-1">
+        <Link
+          href={`/admin/productos/${p.id}`}
+          className="block font-bold text-text-dark text-sm truncate hover:text-pink-deep"
+        >
+          {p.name}
+        </Link>
+        <div className="text-[11px] text-text-mid font-mono">{p.sku}</div>
+        <div className="mt-1 flex items-center gap-2 text-xs">
+          {p.salePrice ? (
+            <>
+              <span className="font-bold text-pink-deep">{FORMAT_EUR.format(p.salePrice)}</span>
+              <span className="text-text-mid line-through">{FORMAT_EUR.format(p.price)}</span>
+            </>
+          ) : (
+            <span className="font-bold text-text-dark">{FORMAT_EUR.format(p.price)}</span>
+          )}
+          <span
+            className={cn(
+              "ml-auto font-bold",
+              p.stock === 0 && "text-red-600",
+              p.stock > 0 && p.stock < 3 && "text-orange-600",
+              p.stock >= 3 && "text-text-dark",
+            )}
+          >
+            stock {p.stock}
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-col items-end gap-1 shrink-0">
+        <div className="flex items-center gap-1">
+          <span
+            title={p.isActive ? "Visible" : "Oculto"}
+            className={cn(
+              "p-1 rounded-full",
+              p.isActive ? "text-emerald-600 bg-emerald-50" : "text-gray-400 bg-gray-100",
+            )}
+          >
+            {p.isActive ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+          </span>
+          {p.isFeatured && (
+            <span className="p-1 rounded-full text-gold bg-gold-light">
+              <Star className="w-3 h-3" />
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-1">
+          <Link
+            href={`/admin/productos/${p.id}`}
+            className="p-1.5 rounded-full text-pink-deep hover:bg-pink-light"
+            aria-label="Editar"
+          >
+            <Pencil className="w-3.5 h-3.5" />
+          </Link>
+          <DeleteProductButton id={p.id} name={p.name} />
+        </div>
+      </div>
+    </article>
   )
 }
 
