@@ -6,6 +6,8 @@ import type { StoreSettings } from "@/lib/store/content"
 import { SectionTopBar } from "./SectionTopBar"
 import { SectionHero } from "./SectionHero"
 import { SectionBrandBanner } from "./SectionBrandBanner"
+import { SectionAbout } from "./SectionAbout"
+import { SectionContact } from "./SectionContact"
 import { SettingsStickyBar } from "./SettingsStickyBar"
 
 const initialState: SettingsFormState = { ok: false }
@@ -27,6 +29,8 @@ export function ContentSettingsForm({ settings }: { settings: StoreSettings }) {
       <SectionTopBar      s={settings} errors={errors} />
       <SectionHero        s={settings} errors={errors} />
       <SectionBrandBanner s={settings} errors={errors} />
+      <SectionAbout       s={settings} errors={errors} />
+      <SectionContact     s={settings} errors={errors} />
 
       <SettingsStickyBar state={state} pending={isPending} />
     </form>

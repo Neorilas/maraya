@@ -134,6 +134,21 @@ model Settings {
   brandBannerCtaUrl  String? @default("/sobre-nosotros")
   brandBannerBadge   String? @default("Hecho con amor en España")
 
+  // --- Página Sobre Nosotros ---
+  aboutIntro        String? @default("Cada bolso cuenta una historia. La nuestra empieza aquí.")
+  aboutHistoryTitle String? @default("Nuestra historia")
+  aboutHistoryText  String? @db.Text @default("Maraya nació de un sueño: crear accesorios artesanales que hagan sentir especial a quien los lleva. Desde nuestro taller, cada pieza cobra vida con dedicación y amor por los detalles.")
+  aboutValuesTitle  String? @default("Nuestros valores")
+  aboutValuesText   String? @db.Text @default("Artesanía auténtica · Materiales de calidad · Diseño con alma · Producción responsable · Piezas únicas que cuentan una historia")
+  aboutProcessTitle String? @default("Nuestro proceso")
+  aboutProcessText  String? @db.Text @default("Cada bolso pasa por las manos de nuestras artesanas. Seleccionamos los materiales uno a uno, cortamos con precisión y cosemos con cuidado cada detalle hasta que la pieza está lista para ti.")
+
+  // --- Página Contacto ---
+  contactIntro   String? @default("¿Tienes alguna pregunta? Escríbenos y te responderemos lo antes posible.")
+  contactAddress String? @default("")
+  contactPhone   String? @default("")
+  contactSchedule String? @default("Lunes a Viernes: 10:00 - 18:00")
+
   // --- Footer ---
   newsletterIntro String? @default("-10% de descuento en tu primer pedido al suscribirte.")
   clubIntro       String? @default("Acceso anticipado · Descuentos exclusivos · Regalos · Envíos gratis siempre")

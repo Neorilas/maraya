@@ -53,6 +53,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | `/checkout` | `app/(store)/checkout/page.tsx` |
 | `/pedido-confirmado/[orderNumber]` | `app/(store)/pedido-confirmado/[orderNumber]/page.tsx` |
 | `/seguimiento/[orderNumber]` | `app/(store)/seguimiento/[orderNumber]/page.tsx` |
+| `/contacto` | `app/(store)/contacto/page.tsx` |
+| `/sobre-nosotros` | `app/(store)/sobre-nosotros/page.tsx` |
 
 `app/(store)/layout.tsx` declara `dynamic = "force-dynamic"` y mete `<TopBar><Header><main>{children}</main><Footer>`.
 
@@ -112,6 +114,20 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | Página confirmación | `app/(store)/pedido-confirmado/[orderNumber]/page.tsx` | |
 | Página seguimiento (público) | `app/(store)/seguimiento/[orderNumber]/page.tsx` | progreso 5 pasos |
 
+### 📬 Contacto
+
+| Pieza | Fichero | Detalle |
+|-------|---------|---------|
+| Página contacto (info + form) | `app/(store)/contacto/page.tsx` | lee Settings para info, form con honeypot |
+| Form contacto (client) | `components/store/ContactForm.tsx` | `useActionState`, anti-spam honeypot |
+| Server action envío | `lib/contact.ts` | valida con zod, envía email vía Resend a adminEmail |
+
+### 📖 Sobre Nosotros
+
+| Pieza | Fichero | Detalle |
+|-------|---------|---------|
+| Página sobre nosotros | `app/(store)/sobre-nosotros/page.tsx` | 3 bloques (historia/valores/proceso) desde Settings |
+
 ### 📦 Productos (catálogo público + admin CRUD)
 
 | Pieza | Fichero |
@@ -154,7 +170,7 @@ Escritura: `lib/admin/settings.ts` → `saveSettingsAction` (admite **updates pa
 
 Forms que la editan (parten el schema en dos vistas):
 - `components/admin/settings/SettingsForm.tsx` — usa `SectionStore`, `SectionSocial`, `SectionStripe`, `SectionFooter` → /admin/configuracion
-- `components/admin/settings/ContentSettingsForm.tsx` — usa `SectionTopBar`, `SectionHero`, `SectionBrandBanner` → /admin/contenido
+- `components/admin/settings/ContentSettingsForm.tsx` — usa `SectionTopBar`, `SectionHero`, `SectionBrandBanner`, `SectionAbout`, `SectionContact` → /admin/contenido
 - `components/admin/settings/SettingsStickyBar.tsx` — UI compartida (botón Guardar + flash)
 - `components/admin/settings/SectionCard.tsx` — wrapper cosmético compartido
 
@@ -267,6 +283,7 @@ Forms que la editan (parten el schema en dos vistas):
 1. `20260427234506_init` — schema inicial.
 2. `20260428072321_cms_content_models` — añadió `HomeCollection`, `TrustBadge`, campos de Settings.
 3. `20260501204738_menu_and_categories` — `MenuItem`, `ProductCategory`.
+4. `20260505132156_about_and_contact_pages` — campos `about*` y `contact*` en Settings.
 
 **Seeds (`prisma/seeds/*.ts`):**
 - `shipping-zones.ts` — 6 zonas (upsert por `code`).

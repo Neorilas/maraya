@@ -59,6 +59,21 @@ export const settingsSchema = z.object({
   brandBannerCtaUrl:  optString.optional(),
   brandBannerBadge:   optString.optional(),
 
+  // Sobre Nosotros
+  aboutIntro:        optString.optional(),
+  aboutHistoryTitle: optString.optional(),
+  aboutHistoryText:  optString.optional(),
+  aboutValuesTitle:  optString.optional(),
+  aboutValuesText:   optString.optional(),
+  aboutProcessTitle: optString.optional(),
+  aboutProcessText:  optString.optional(),
+
+  // Contacto
+  contactIntro:    optString.optional(),
+  contactPhone:    optString.optional(),
+  contactAddress:  optString.optional(),
+  contactSchedule: optString.optional(),
+
   // Footer
   newsletterIntro: optString.optional(),
   clubIntro:       optString.optional(),
@@ -122,6 +137,8 @@ export async function saveSettingsAction(
   await prisma.settings.update({ where: { id: "singleton" }, data })
 
   revalidatePath("/", "layout")
+  revalidatePath("/contacto")
+  revalidatePath("/sobre-nosotros")
   revalidatePath("/admin/configuracion")
   revalidatePath("/admin/contenido")
 
