@@ -4,6 +4,7 @@ import { useActionState } from "react"
 import { Loader2, Save, Trash2 } from "lucide-react"
 import { Input, Toggle } from "@/components/admin/forms/Field"
 import { InlineFlash } from "./InlineFlash"
+import { CollectionImageField } from "./CollectionImageField"
 import {
   CollectionDestinationField,
   type DestinationCategoryOption,
@@ -80,20 +81,11 @@ export function CollectionRow({
           hint="Ej: from-pink-primary to-pink-deep"
           error={errors.gradient}
         />
-        <Input
-          label="Imagen URL"
-          name="imageUrl"
-          defaultValue={c.imageUrl ?? ""}
-          hint="Vacío = solo gradient"
-          error={errors.imageUrl}
-        />
-        <Input
-          label="Alt de la imagen"
-          name="imageAlt"
-          defaultValue={c.imageAlt ?? ""}
-          hint="Texto alternativo (SEO/accesibilidad). Vacío = decorativa."
-          maxLength={200}
-          error={errors.imageAlt}
+        <CollectionImageField
+          initialUrl={c.imageUrl}
+          initialAlt={c.imageAlt}
+          errorUrl={errors.imageUrl}
+          errorAlt={errors.imageAlt}
         />
         <CollectionDestinationField
           initialHref={c.href}

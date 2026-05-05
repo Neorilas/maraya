@@ -5,6 +5,7 @@ import { Plus, Loader2 } from "lucide-react"
 import { Input, Toggle } from "@/components/admin/forms/Field"
 import { InlineFlash } from "./InlineFlash"
 import { CollectionRow, type CollectionRowData } from "./CollectionRow"
+import { CollectionImageField } from "./CollectionImageField"
 import {
   CollectionDestinationField,
   type DestinationCategoryOption,
@@ -93,18 +94,11 @@ function NewCollectionForm({
             defaultValue="from-pink-primary to-pink-deep"
             error={errors.gradient}
           />
-          <Input
-            label="Imagen URL"
-            name="imageUrl"
-            placeholder="(vacío para usar gradient)"
-            error={errors.imageUrl}
-          />
-          <Input
-            label="Alt de la imagen"
-            name="imageAlt"
-            placeholder="(vacío = decorativa)"
-            maxLength={200}
-            error={errors.imageAlt}
+          <CollectionImageField
+            initialUrl={null}
+            initialAlt={null}
+            errorUrl={errors.imageUrl}
+            errorAlt={errors.imageAlt}
           />
           <CollectionDestinationField
             initialHref={null}
