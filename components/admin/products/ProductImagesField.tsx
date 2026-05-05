@@ -58,6 +58,48 @@ export function ProductImagesField({
     setItems((xs) => xs.map((it, i) => (i === idx ? { ...it, alt } : it)))
   }
 
+  async function replaceFile(idx: number, file: File) {
+    const tempUrl = URL.createObjectURL(file)
+    setItems((xs) =>
+      xs.map((it, i) =>
+        i === idx ? { ...it, url: tempUrl, status: "uploading" } : it,
+      ),
+    )
+    try {
+      const presign = await getProductImageUploadUrl({
+        filename: file.name,
+        contentType: file.type,
+        size: file.size,
+      })
+      if (!presign.ok) throw new Error(presign.error)
+      const put = await fetch(presign.uploadUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type, "x-amz-acl": "public-read" },
+      })
+      if (!put.ok) throw new Error(`Subida fallida (${put.status})`)
+      setItems((xs) =>
+        xs.map((it, i) =>
+          i === idx ? { ...it, url: presign.publicUrl, status: "ready" } : it,
+        ),
+      )
+    } catch (err) {
+      setItems((xs) =>
+        xs.map((it, i) =>
+          i === idx
+            ? {
+                ...it,
+                status: "error",
+                error: err instanceof Error ? err.message : "Error",
+              }
+            : it,
+        ),
+      )
+    } finally {
+      URL.revokeObjectURL(tempUrl)
+    }
+  }
+
   function addUrl(url: string) {
     const u = url.trim()
     if (!u) return
@@ -177,6 +219,7 @@ export function ProductImagesField({
               index={i}
               onRemove={() => remove(i)}
               onAltChange={(alt) => setAlt(i, alt)}
+              onReplace={(file) => replaceFile(i, file)}
             />
           ))}
         </div>
@@ -213,13 +256,16 @@ function ItemCard({
   index,
   onRemove,
   onAltChange,
+  onReplace,
 }: {
   item: Item
   index: number
   onRemove: () => void
   onAltChange: (alt: string) => void
+  onReplace: (file: File) => void
 }) {
   const isReady = item.status === "ready"
+  const replaceInput = useRef<HTMLInputElement>(null)
   return (
     <div className="card-maraya gold-border p-2 flex flex-col gap-2">
       <div className="relative aspect-square rounded-xl overflow-hidden group">
@@ -245,14 +291,27 @@ function ItemCard({
             </span>
           </div>
         ) : item.url.startsWith("http") ? (
-          <Image
-            src={item.url}
-            alt={item.alt || `imagen ${index + 1}`}
-            fill
-            sizes="200px"
-            className="object-cover"
-            unoptimized
-          />
+          <>
+            <Image
+              src={item.url}
+              alt={item.alt || `imagen ${index + 1}`}
+              fill
+              sizes="200px"
+              className="object-cover"
+              unoptimized
+            />
+            <input
+              ref={replaceInput}
+              type="file"
+              accept="image/*"
+              className="absolute inset-0 opacity-0 cursor-pointer z-10"
+              onChange={(e) => {
+                const f = e.target.files?.[0]
+                if (f) onReplace(f)
+                if (replaceInput.current) replaceInput.current.value = ""
+              }}
+            />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-pink-light text-pink-deep">
             <ImagePlus className="w-6 h-6" />
@@ -270,7 +329,7 @@ function ItemCard({
             type="button"
             onClick={onRemove}
             aria-label="Quitar"
-            className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-white/90 text-red-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-red-600 hover:text-white"
+            className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-white/90 text-red-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-red-600 hover:text-white z-20"
           >
             <X className="w-3.5 h-3.5" />
           </button>

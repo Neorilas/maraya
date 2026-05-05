@@ -91,7 +91,6 @@ export function CollectionImageField({
         {status === "empty" && (
           <>
             <div
-              onClick={() => fileInput.current?.click()}
               className="relative flex flex-col items-center justify-center gap-1.5 px-4 py-6 rounded-xl border-2 border-dashed border-pink-light bg-cream/50 hover:border-pink-primary transition cursor-pointer"
             >
               <UploadCloud className="w-6 h-6 text-pink-deep" />
@@ -103,7 +102,7 @@ export function CollectionImageField({
                 ref={fileInput}
                 type="file"
                 accept="image/*"
-                className="absolute inset-0 opacity-0 cursor-pointer"
+                className="absolute inset-0 opacity-0 cursor-pointer z-10"
                 onChange={(e) => onPick(e.target.files)}
               />
             </div>
@@ -155,7 +154,7 @@ export function CollectionImageField({
 
         {status === "ready" && url && (
           <div className="flex items-start gap-3">
-            <div className="relative w-24 h-24 rounded-xl overflow-hidden gold-border shrink-0 group">
+            <div className="relative w-24 h-24 rounded-xl overflow-hidden gold-border shrink-0 group cursor-pointer">
               <Image
                 src={url}
                 alt={alt || ""}
@@ -164,11 +163,18 @@ export function CollectionImageField({
                 className="object-cover"
                 unoptimized
               />
+              <input
+                ref={fileInput}
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                onChange={(e) => onPick(e.target.files)}
+              />
               <button
                 type="button"
                 onClick={remove}
                 aria-label="Quitar imagen"
-                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-white/90 text-red-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-red-600 hover:text-white"
+                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-white/90 text-red-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-red-600 hover:text-white z-20"
               >
                 <X className="w-3 h-3" />
               </button>
