@@ -20,6 +20,18 @@ const imagesPreprocess = (v: unknown) => {
     .filter(Boolean)
 }
 
+/**
+ * Alt-text paralelos a `images`. NO filtramos vacíos — la posición debe casar
+ * 1:1 con el array de URLs. Quien envía es ProductImagesField, que serializa
+ * un alt por línea (línea vacía = sin alt).
+ */
+const imagesAltPreprocess = (v: unknown) => {
+  if (Array.isArray(v)) return v.map((s) => String(s ?? "").trim())
+  if (typeof v !== "string") return []
+  // No filtramos vacíos para preservar posiciones
+  return v.split(/\r?\n/).map((s) => s.trim())
+}
+
 /** Tags como string CSV → string[] */
 const tagsPreprocess = (v: unknown) => {
   if (Array.isArray(v)) return v
@@ -47,6 +59,10 @@ const baseSchema = {
   category: z.preprocess(emptyToNull, z.string().nullable()),
   tags: z.preprocess(tagsPreprocess, z.array(z.string()).max(20)),
   images: z.preprocess(imagesPreprocess, z.array(z.string().url("URL inválida")).max(8)),
+  imagesAlt: z.preprocess(
+    imagesAltPreprocess,
+    z.array(z.string().max(200)).max(8),
+  ),
   isActive: z.preprocess((v) => v === "on" || v === true, z.boolean()),
   isFeatured: z.preprocess((v) => v === "on" || v === true, z.boolean()),
 }
@@ -91,6 +107,11 @@ async function requireSession() {
   if (!s?.user) throw new Error("No autorizado")
 }
 
+/** Asegura imagesAlt[i] para cada images[i]; corta o rellena con "". */
+function normalizeImagesAlt(images: string[], alts: string[]): string[] {
+  return Array.from({ length: images.length }, (_, i) => alts[i] ?? "")
+}
+
 /** Crea un producto. Tras éxito, redirige a la edición del nuevo. */
 export async function createProductAction(
   _prev: ProductFormState,
@@ -111,9 +132,13 @@ export async function createProductAction(
     }
   }
 
+  const data = {
+    ...parsed.data,
+    imagesAlt: normalizeImagesAlt(parsed.data.images, parsed.data.imagesAlt),
+  }
   let id: string
   try {
-    const created = await prisma.product.create({ data: parsed.data })
+    const created = await prisma.product.create({ data })
     id = created.id
   } catch (err) {
     const msg = err instanceof Error ? err.message : ""
@@ -143,7 +168,11 @@ export async function updateProductAction(
       errors: zodErrors(parsed.error.issues),
     }
   }
-  const { id, ...data } = parsed.data
+  const { id, ...rest } = parsed.data
+  const data = {
+    ...rest,
+    imagesAlt: normalizeImagesAlt(rest.images, rest.imagesAlt),
+  }
   try {
     await prisma.product.update({ where: { id }, data })
   } catch (err) {

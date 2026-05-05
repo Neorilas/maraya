@@ -75,7 +75,7 @@ function CollectionCard({ c }: { c: HomeCollectionRow }) {
         {c.imageUrl ? (
           <Image
             src={c.imageUrl}
-            alt=""
+            alt={c.imageAlt ?? ""}
             fill
             sizes="(min-width:1024px) 22vw, 45vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"

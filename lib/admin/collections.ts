@@ -17,6 +17,7 @@ const baseSchema = {
   tag: optString,
   gradient: z.string().min(1, "Obligatorio"),
   imageUrl: optString,
+  imageAlt: optString,
   href: optString,
   sortOrder: z.coerce.number().int().min(0).max(99),
   isActive: z.preprocess((v) => v === "on" || v === true, z.boolean()),

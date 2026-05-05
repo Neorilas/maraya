@@ -13,11 +13,16 @@ export const metadata = {
 }
 
 export default async function ContenidoPage() {
-  const [settings, badges, collections, menuItems] = await Promise.all([
+  const [settings, badges, collections, menuItems, categories] = await Promise.all([
     getSettings(),
     prisma.trustBadge.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.homeCollection.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.menuItem.findMany({ orderBy: { sortOrder: "asc" } }),
+    prisma.productCategory.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: "asc" },
+      select: { slug: true, label: true },
+    }),
   ])
 
   return (
@@ -39,7 +44,7 @@ export default async function ContenidoPage() {
       <ContentSettingsForm settings={settings} />
       <MenuItemsEditor items={menuItems} />
       <TrustBadgesEditor badges={badges} />
-      <CollectionsEditor collections={collections} />
+      <CollectionsEditor collections={collections} categories={categories} />
     </div>
   )
 }

@@ -13,13 +13,18 @@ import { cn } from "@/lib/cn"
  */
 export function ProductGallery({
   images,
+  imagesAlt = [],
   alt,
 }: {
   images: string[]
+  /** Alt-text paralelo a `images`. Si falta o es vacío en una posición, se usa `alt`. */
+  imagesAlt?: string[]
+  /** Fallback alt-text cuando una imagen no tiene alt explícito (típicamente nombre del producto). */
   alt: string
 }) {
   const [active, setActive] = useState(0)
   const visible = images.length > 0 ? images : []
+  const altFor = (i: number) => imagesAlt[i]?.trim() || alt
 
   if (visible.length === 0) {
     return (
@@ -60,7 +65,7 @@ export function ProductGallery({
       <div className="relative aspect-square rounded-2xl gold-border overflow-hidden bg-cream">
         <Image
           src={visible[active]}
-          alt={alt}
+          alt={altFor(active)}
           fill
           sizes="(min-width:1024px) 40vw, 90vw"
           priority

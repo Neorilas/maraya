@@ -42,6 +42,7 @@ export const getCatalog = cache(async (f: CatalogFilters = {}) => {
       salePrice: true,
       stock: true,
       images: true,
+      imagesAlt: true,
       category: true,
       isFeatured: true,
       createdAt: true,
@@ -72,7 +73,7 @@ export const getRelatedProducts = cache(
       orderBy: [{ isFeatured: "desc" }, { createdAt: "desc" }],
       select: {
         id: true, sku: true, slug: true, name: true,
-        price: true, salePrice: true, images: true, stock: true,
+        price: true, salePrice: true, images: true, imagesAlt: true, stock: true,
       },
     })
   },

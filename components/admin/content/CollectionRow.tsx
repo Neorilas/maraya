@@ -5,6 +5,10 @@ import { Loader2, Save, Trash2 } from "lucide-react"
 import { Input, Toggle } from "@/components/admin/forms/Field"
 import { InlineFlash } from "./InlineFlash"
 import {
+  CollectionDestinationField,
+  type DestinationCategoryOption,
+} from "./CollectionDestinationField"
+import {
   saveCollection,
   deleteCollection,
   type ActionResult,
@@ -19,12 +23,19 @@ export type CollectionRowData = {
   tag: string | null
   gradient: string
   imageUrl: string | null
+  imageAlt: string | null
   href: string | null
   sortOrder: number
   isActive: boolean
 }
 
-export function CollectionRow({ c }: { c: CollectionRowData }) {
+export function CollectionRow({
+  c,
+  categories,
+}: {
+  c: CollectionRowData
+  categories: DestinationCategoryOption[]
+}) {
   const [state, formAction, pending] = useActionState(saveCollection, initial)
   const errors = state.errors ?? {}
 
@@ -77,10 +88,16 @@ export function CollectionRow({ c }: { c: CollectionRowData }) {
           error={errors.imageUrl}
         />
         <Input
-          label="Link de destino"
-          name="href"
-          defaultValue={c.href ?? ""}
-          hint={`Vacío = /bolsos?cat=${c.slug}`}
+          label="Alt de la imagen"
+          name="imageAlt"
+          defaultValue={c.imageAlt ?? ""}
+          hint="Texto alternativo (SEO/accesibilidad). Vacío = decorativa."
+          maxLength={200}
+          error={errors.imageAlt}
+        />
+        <CollectionDestinationField
+          initialHref={c.href}
+          categories={categories}
           error={errors.href}
         />
       </div>

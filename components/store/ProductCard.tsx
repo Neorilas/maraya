@@ -15,6 +15,7 @@ export function ProductCard({ p }: { p: CatalogItem }) {
   const fresh = isNew(p.createdAt)
   const primary = p.images[0]
   const hover = p.images[1]
+  const primaryAlt = p.imagesAlt?.[0]?.trim() || p.name
   const href = `/bolsos/${p.slug}`
 
   const badge =
@@ -29,7 +30,7 @@ export function ProductCard({ p }: { p: CatalogItem }) {
         {primary ? (
           <Image
             src={primary}
-            alt={p.name}
+            alt={primaryAlt}
             fill
             sizes="(min-width:1024px) 25vw, 50vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"

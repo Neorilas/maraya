@@ -5,14 +5,20 @@ import { Plus, Loader2 } from "lucide-react"
 import { Input, Toggle } from "@/components/admin/forms/Field"
 import { InlineFlash } from "./InlineFlash"
 import { CollectionRow, type CollectionRowData } from "./CollectionRow"
+import {
+  CollectionDestinationField,
+  type DestinationCategoryOption,
+} from "./CollectionDestinationField"
 import { createCollection, type ActionResult } from "@/lib/admin/collections"
 
 const initial: ActionResult = { ok: false }
 
 export function CollectionsEditor({
   collections,
+  categories,
 }: {
   collections: CollectionRowData[]
+  categories: DestinationCategoryOption[]
 }) {
   return (
     <div className="space-y-4">
@@ -27,7 +33,7 @@ export function CollectionsEditor({
         </div>
       </header>
 
-      <NewCollectionForm />
+      <NewCollectionForm categories={categories} />
 
       <div className="space-y-3">
         {collections.length === 0 ? (
@@ -35,14 +41,20 @@ export function CollectionsEditor({
             Aún no hay colecciones. Añade la primera arriba.
           </div>
         ) : (
-          collections.map((c) => <CollectionRow key={c.id} c={c} />)
+          collections.map((c) => (
+            <CollectionRow key={c.id} c={c} categories={categories} />
+          ))
         )}
       </div>
     </div>
   )
 }
 
-function NewCollectionForm() {
+function NewCollectionForm({
+  categories,
+}: {
+  categories: DestinationCategoryOption[]
+}) {
   const [state, formAction, pending] = useActionState(createCollection, initial)
   const errors = state.errors ?? {}
 
@@ -88,9 +100,15 @@ function NewCollectionForm() {
             error={errors.imageUrl}
           />
           <Input
-            label="Link"
-            name="href"
-            placeholder="(vacío para usar /bolsos?cat=slug)"
+            label="Alt de la imagen"
+            name="imageAlt"
+            placeholder="(vacío = decorativa)"
+            maxLength={200}
+            error={errors.imageAlt}
+          />
+          <CollectionDestinationField
+            initialHref={null}
+            categories={categories}
             error={errors.href}
           />
         </div>

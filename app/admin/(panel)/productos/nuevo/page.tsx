@@ -21,6 +21,7 @@ const EMPTY: ProductFormDefaults = {
   category: null,
   tags: [],
   images: [],
+  imagesAlt: [],
   isActive: true,
   isFeatured: false,
 }

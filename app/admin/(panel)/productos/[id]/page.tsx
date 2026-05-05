@@ -39,6 +39,7 @@ export default async function EditarProductoPage({
     category: p.category,
     tags: p.tags,
     images: p.images,
+    imagesAlt: p.imagesAlt,
     isActive: p.isActive,
     isFeatured: p.isFeatured,
   }

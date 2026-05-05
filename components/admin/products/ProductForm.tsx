@@ -32,6 +32,7 @@ export type ProductFormDefaults = {
   category: string | null
   tags: string[]
   images: string[]
+  imagesAlt: string[]
   isActive: boolean
   isFeatured: boolean
 }
@@ -166,7 +167,11 @@ export function ProductForm({
 
       <div className="card-maraya p-5 sm:p-6 space-y-4">
         <h2 className="font-display !text-text-dark text-lg">Imágenes</h2>
-        <ProductImagesField initial={defaults.images} error={errors.images} />
+        <ProductImagesField
+          initial={defaults.images}
+          initialAlts={defaults.imagesAlt}
+          error={errors.images}
+        />
       </div>
 
       <div className="card-maraya p-5 sm:p-6 space-y-1">

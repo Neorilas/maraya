@@ -56,7 +56,7 @@ export default async function ProductDetailPage({
         <Breadcrumbs name={p.name} category={p.category} />
 
         <div className="mt-4 sm:mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
-          <ProductGallery images={p.images} alt={p.name} />
+          <ProductGallery images={p.images} imagesAlt={p.imagesAlt} alt={p.name} />
 
           <div className="space-y-4 sm:space-y-5">
             <header>

@@ -16,6 +16,8 @@ model Product {
   price       Float
   salePrice   Float?
   images      String[]
+  /// Alt-text por imagen (paralelo a `images`, mismo índice). Vacío = usar nombre del producto.
+  imagesAlt   String[]
   stock       Int         @default(0)
   isActive    Boolean     @default(true)
   isFeatured  Boolean     @default(false)
@@ -169,6 +171,8 @@ model HomeCollection {
   /// Tailwind classes tipo "from-pink-primary to-pink-deep"
   gradient  String   @default("from-pink-primary to-pink-deep")
   imageUrl  String?
+  /// Alt-text de la imagen (vacío = decorativa, alt="").
+  imageAlt  String?
   href      String?
   sortOrder Int      @default(0)
   isActive  Boolean  @default(true)

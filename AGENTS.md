@@ -142,7 +142,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | Validación zod productos | `lib/admin/products.ts` (`productCreateSchema`, `productUpdateSchema`) |
 | Tabla productos admin | `components/admin/products/ProductsTable.tsx` |
 | Form producto (crear/editar) | `components/admin/products/ProductForm.tsx` |
-| Subida imágenes (drop + URL paste) | `components/admin/products/ProductImagesField.tsx` |
+| Subida imágenes (drop + URL paste + alt SEO) | `components/admin/products/ProductImagesField.tsx` |
 | Botón eliminar con confirm | `components/admin/products/DeleteProductButton.tsx` |
 | Lista categorías editables | `components/admin/categories/CategoriesEditor.tsx` (desplegable en /admin/productos) |
 | Categoría row | `components/admin/categories/CategoryRow.tsx` |
@@ -156,7 +156,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | Header | `components/store/Header.tsx` | (NAV viene de `MenuItem` en BD) | Editor `MenuItemsEditor` en /contenido |
 | Hero | `components/store/HeroBanner.tsx` | Settings.hero* | `SectionHero` en /contenido |
 | Trust badges | `components/store/TrustBadges.tsx` | `TrustBadge` model | `TrustBadgesEditor` en /contenido |
-| Colecciones del home | `components/store/CollectionsGrid.tsx` | `HomeCollection` model | `CollectionsEditor` en /contenido |
+| Colecciones del home | `components/store/CollectionsGrid.tsx` | `HomeCollection` model | `CollectionsEditor` + `CollectionDestinationField` en /contenido |
 | Brand banner ("Brilla. Destaca.") | `components/store/BrandBanner.tsx` | Settings.brandBanner* | `SectionBrandBanner` en /contenido |
 | Footer | `components/store/Footer.tsx` | Settings.newsletterIntro / clubIntro / social URLs | `SectionFooter` + `SectionSocial` en /admin/configuracion |
 | Logo | `public/maraya-logo.png` | (no editable desde admin, cambiar archivo) | swap directo |
@@ -266,13 +266,13 @@ Forms que la editan (parten el schema en dos vistas):
 
 | Modelo | Función | Único | Notas |
 |--------|---------|-------|-------|
-| `Product` | Catálogo bolsos | `sku`, `slug` | `images: String[]`, `tags: String[]`, soft delete vía `isActive` cuando hay pedidos |
+| `Product` | Catálogo bolsos | `sku`, `slug` | `images: String[]`, `imagesAlt: String[]` (paralelo, alt SEO por imagen), `tags: String[]`, soft delete vía `isActive` cuando hay pedidos |
 | `Order` | Pedido cliente | `orderNumber` (`MAR-YYYY-NNNN`) | `status: OrderStatus`, items en relación, transacción de descuento stock en `markOrderAsPaid` |
 | `OrderItem` | Línea pedido | — | `productName` y `price` snapshot al momento de pedir |
 | `OrderStatusHistory` | Timeline | — | Append-only, lo escriben las server actions de orders |
 | `ShippingZone` | Tarifas | `code` | `code: SPAIN/BALEARES/CANARIAS/EUROPE/USA/OTHER/<custom>`, `freeFrom: Float?` |
 | `Settings` | Singleton CMS | `id="singleton"` | TODOS los textos del home + datos tienda + Stripe |
-| `HomeCollection` | Cards del grid de colecciones | `slug` | `gradient: String` (Tailwind classes), `imageUrl?` |
+| `HomeCollection` | Cards del grid de colecciones | `slug` | `gradient: String` (Tailwind classes), `imageUrl?`, `imageAlt?` (alt SEO de la imagen) |
 | `TrustBadge` | Cápsulas con icono | — | `icon: String` matchea `STORE_ICON_MAP` en `lib/store/icons.ts` |
 | `MenuItem` | Items del header | — | `sortOrder`, `isActive`, `hasDropdown` |
 | `ProductCategory` | Categorías catálogo | `slug` | Borrado lógico (desactiva) si está en uso por algún Product |
@@ -284,6 +284,8 @@ Forms que la editan (parten el schema en dos vistas):
 2. `20260428072321_cms_content_models` — añadió `HomeCollection`, `TrustBadge`, campos de Settings.
 3. `20260501204738_menu_and_categories` — `MenuItem`, `ProductCategory`.
 4. `20260505132156_about_and_contact_pages` — campos `about*` y `contact*` en Settings.
+5. `20260505_image_alt_fields` — `HomeCollection.imageAlt`, `Product.imagesAlt`.
+6. `20260505191740_images_alt` — auto-generada por Prisma (drift fix de la anterior).
 
 **Seeds (`prisma/seeds/*.ts`):**
 - `shipping-zones.ts` — 6 zonas (upsert por `code`).
@@ -300,7 +302,7 @@ Forms que la editan (parten el schema en dos vistas):
 
 | Var | Para qué |
 |-----|----------|
-| `DATABASE_URL` | Postgres (local: con túnel SSH `127.0.0.1:5432`) |
+| `DATABASE_URL` | Postgres (local: con túnel SSH `127.0.0.1:55432`; server: directo) |
 | `AUTH_SECRET` / `NEXTAUTH_SECRET` | NextAuth firma JWT |
 | `AUTH_URL` / `NEXTAUTH_URL` / `NEXT_PUBLIC_URL` | URL pública (en server: `https://maraya.91.107.235.70.nip.io`) |
 | `AUTH_TRUST_HOST` | `true` cuando hay reverse proxy delante |
@@ -343,7 +345,7 @@ Producción: `/root/maraya/.env` en el server. Compose lo lee al recrear contain
 ```bash
 # Local
 npm run dev                # Next dev server
-npm run db:tunnel          # Túnel SSH a Postgres Hetzner (127.0.0.1:5432)
+npm run db:tunnel          # Túnel SSH a Postgres Hetzner (local 55432 → remoto 5432)
 npm run db:migrate         # Prisma migrate dev (necesita túnel)
 npm run db:studio          # Prisma Studio (necesita túnel)
 npm run db:seed            # Ejecutar seeds
