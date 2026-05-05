@@ -23,8 +23,8 @@ export async function Header() {
               width={420}
               height={420}
               priority
-              sizes="(max-width: 640px) 72px, (max-width: 1024px) 96px, 112px"
-              className="h-[72px] sm:h-24 lg:h-28 w-auto transition-transform group-hover:scale-105 drop-shadow-[0_2px_4px_rgba(244,114,182,0.25)]"
+              sizes="(max-width: 640px) 96px, (max-width: 1024px) 96px, 112px"
+              className="h-24 sm:h-24 lg:h-28 w-auto transition-transform group-hover:scale-105 drop-shadow-[0_2px_4px_rgba(244,114,182,0.25)]"
             />
           </Link>
 
