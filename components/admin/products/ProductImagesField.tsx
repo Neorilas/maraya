@@ -145,7 +145,6 @@ export function ProductImagesField({
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
-        onClick={() => fileInput.current?.click()}
         className={`relative flex flex-col items-center justify-center gap-2 px-6 py-8 rounded-2xl border-2 border-dashed transition cursor-pointer ${
           dragOver
             ? "border-pink-primary bg-pink-light/60"
@@ -164,7 +163,7 @@ export function ProductImagesField({
           type="file"
           multiple
           accept="image/*"
-          className="absolute inset-0 opacity-0 cursor-pointer"
+          className="absolute inset-0 opacity-0 cursor-pointer z-10"
           onChange={(e) => onPick(e.target.files)}
         />
       </div>
