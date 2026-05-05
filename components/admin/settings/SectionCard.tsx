@@ -16,7 +16,7 @@ export function SectionCard({
 }) {
   const gridClass = cols === 2 ? "sm:grid-cols-2" : "grid-cols-1"
   return (
-    <section className="card-maraya p-5 sm:p-6 space-y-4">
+    <section className="card-maraya p-4 sm:p-6 space-y-4">
       <header className="flex items-start gap-3">
         {Icon && (
           <span className="w-10 h-10 rounded-full bg-pink-light text-pink-deep flex items-center justify-center shrink-0">

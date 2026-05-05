@@ -73,7 +73,7 @@ export default async function PedidoDetailPage({
         <OrderStatusBadge status={o.status as OrderStatus} />
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-4 lg:gap-6">
         <div className="space-y-6">
           <section>
             <h2 className="font-display !text-text-dark text-lg mb-3">
@@ -89,7 +89,7 @@ export default async function PedidoDetailPage({
             />
           </section>
 
-          <section className="card-maraya p-5 space-y-2 text-sm">
+          <section className="card-maraya p-4 sm:p-5 space-y-2 text-sm">
             <h2 className="font-display !text-text-dark text-lg mb-2">Totales</h2>
             <Row label="Subtotal" value={FORMAT_EUR.format(o.subtotal)} />
             <Row
@@ -126,7 +126,7 @@ export default async function PedidoDetailPage({
             trackingNumber={o.trackingNumber}
           />
 
-          <section className="card-maraya p-5 space-y-3 text-sm">
+          <section className="card-maraya p-4 sm:p-5 space-y-3 text-sm">
             <h2 className="font-display !text-text-dark text-lg">
               Datos del cliente
             </h2>
@@ -148,7 +148,7 @@ export default async function PedidoDetailPage({
           </section>
 
           {o.stripePaymentId && (
-            <section className="card-maraya p-5 space-y-2 text-sm">
+            <section className="card-maraya p-4 sm:p-5 space-y-2 text-sm">
               <h2 className="font-display !text-text-dark text-lg">Pago</h2>
               <Detail icon={CreditCard} label="Stripe Payment Intent">
                 <a
