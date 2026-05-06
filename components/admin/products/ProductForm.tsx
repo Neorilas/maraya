@@ -12,8 +12,8 @@ import { ProductImagesField } from "./ProductImagesField"
 import {
   createProductAction,
   updateProductAction,
-  type ProductFormState,
 } from "@/lib/admin/products"
+import type { ProductFormState } from "@/lib/admin/products-schema"
 import { slugify } from "@/lib/slug"
 
 const initial: ProductFormState = { ok: false }

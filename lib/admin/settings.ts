@@ -18,7 +18,7 @@ const optUrl = z.preprocess(
  * para permitir updates PARCIALES — el form de /admin/configuracion
  * solo envía sus campos, el de /admin/contenido los suyos.
  */
-export const settingsSchema = z.object({
+const settingsSchema = z.object({
   // Tienda
   storeName:  z.string().min(1, "Obligatorio").optional(),
   storeEmail: z.string().email("Email inválido").optional(),
