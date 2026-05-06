@@ -86,6 +86,7 @@ export async function Footer() {
           )}
           <Link
             href="/club"
+            prefetch={false}
             className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-gold hover:text-pink-primary transition"
           >
             Únete ahora →
@@ -97,10 +98,10 @@ export async function Footer() {
             ¿Necesitas ayuda?
           </span>
           <ul className="mt-3 space-y-2 text-sm text-white/80">
-            <li><Link href="/contacto" className="hover:text-pink-primary">Contacto</Link></li>
-            <li><Link href="/envios" className="hover:text-pink-primary">Envíos y devoluciones</Link></li>
-            <li><Link href="/faq" className="hover:text-pink-primary">Preguntas frecuentes</Link></li>
-            <li><Link href="/legal" className="hover:text-pink-primary">Aviso legal</Link></li>
+            <li><Link href="/contacto" prefetch={false} className="hover:text-pink-primary">Contacto</Link></li>
+            <li><Link href="/envios" prefetch={false} className="hover:text-pink-primary">Envíos y devoluciones</Link></li>
+            <li><Link href="/faq" prefetch={false} className="hover:text-pink-primary">Preguntas frecuentes</Link></li>
+            <li><Link href="/legal" prefetch={false} className="hover:text-pink-primary">Aviso legal</Link></li>
           </ul>
           {s.whatsappNumber && (
             <a
@@ -124,9 +125,9 @@ export async function Footer() {
             en España
           </p>
           <p>
-            <Link href="/legal/privacidad" className="hover:text-white">Privacidad</Link>{" "}·{" "}
-            <Link href="/legal/terminos" className="hover:text-white">Términos</Link>{" "}·{" "}
-            <Link href="/legal/cookies" className="hover:text-white">Cookies</Link>
+            <Link href="/legal/privacidad" prefetch={false} className="hover:text-white">Privacidad</Link>{" "}·{" "}
+            <Link href="/legal/terminos" prefetch={false} className="hover:text-white">Términos</Link>{" "}·{" "}
+            <Link href="/legal/cookies" prefetch={false} className="hover:text-white">Cookies</Link>
           </p>
         </div>
       </div>

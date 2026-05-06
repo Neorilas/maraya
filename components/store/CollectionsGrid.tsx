@@ -64,6 +64,7 @@ function CollectionCard({ c }: { c: HomeCollectionRow }) {
   return (
     <Link
       href={href}
+      prefetch={false}
       aria-label={`Ver colección ${c.name}`}
       className="group relative aspect-[2/3] block transition-transform hover:-translate-y-1"
     >

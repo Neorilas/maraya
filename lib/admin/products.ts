@@ -193,13 +193,17 @@ export async function updateProductAction(
 
 /** Borra un producto si NO está referenciado por pedidos (en cuyo caso desactiva). */
 export async function deleteProductAction(id: string): Promise<{ ok: boolean; message: string }> {
-  await requireSession()
+  try {
+    await requireSession()
+  } catch {
+    return { ok: false, message: "Sesión expirada. Recarga la página." }
+  }
   try {
     const refs = await prisma.orderItem.count({ where: { productId: id } })
     if (refs > 0) {
       await prisma.product.update({ where: { id }, data: { isActive: false } })
       revalidatePath("/admin/productos")
-      revalidatePath("/", "layout")
+      revalidatePath("/bolsos", "layout")
       return {
         ok: true,
         message: `Está en ${refs} pedido(s) — desactivado en su lugar.`,
@@ -207,12 +211,17 @@ export async function deleteProductAction(id: string): Promise<{ ok: boolean; me
     }
     await prisma.product.delete({ where: { id } })
     revalidatePath("/admin/productos")
-    revalidatePath("/", "layout")
+    revalidatePath("/bolsos", "layout")
     return { ok: true, message: "Producto eliminado" }
   } catch (err) {
     const msg = err instanceof Error ? err.message : ""
     if (msg.includes("Record to") && msg.includes("not found")) {
       return { ok: false, message: "El producto ya no existe" }
+    }
+    if (msg.includes("Foreign key constraint")) {
+      await prisma.product.update({ where: { id }, data: { isActive: false } }).catch(() => {})
+      revalidatePath("/admin/productos")
+      return { ok: true, message: "Tiene referencias — desactivado en su lugar." }
     }
     return { ok: false, message: "Error al eliminar el producto" }
   }

@@ -48,6 +48,7 @@ export async function Header() {
             {/* Mi cuenta: icono solo en móvil, icono+texto en lg */}
             <Link
               href="/admin/login"
+              prefetch={false}
               aria-label="Mi cuenta"
               className="flex items-center gap-1.5 text-sm font-semibold text-text-dark hover:text-pink-deep transition lg:px-3 lg:py-2"
             >
@@ -72,6 +73,7 @@ export async function Header() {
                 <li key={item.id} className="shrink-0">
                   <Link
                     href={item.href}
+                    prefetch={false}
                     className="flex items-center gap-1 px-3 py-2 rounded-full uppercase tracking-wider text-[11px] sm:text-xs text-text-dark hover:bg-pink-light hover:text-pink-deep transition"
                   >
                     {item.label}
