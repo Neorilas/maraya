@@ -195,10 +195,7 @@ export async function updateProductAction(
 export async function deleteProductAction(id: string): Promise<{ ok: boolean; message: string }> {
   try {
     await requireSession()
-  } catch {
-    return { ok: false, message: "Sesión expirada. Recarga la página." }
-  }
-  try {
+
     const refs = await prisma.orderItem.count({ where: { productId: id } })
     if (refs > 0) {
       await prisma.product.update({ where: { id }, data: { isActive: false } })
@@ -214,6 +211,7 @@ export async function deleteProductAction(id: string): Promise<{ ok: boolean; me
     revalidatePath("/bolsos", "layout")
     return { ok: true, message: "Producto eliminado" }
   } catch (err) {
+    console.error("[deleteProduct]", err)
     const msg = err instanceof Error ? err.message : ""
     if (msg.includes("Record to") && msg.includes("not found")) {
       return { ok: false, message: "El producto ya no existe" }
@@ -222,6 +220,9 @@ export async function deleteProductAction(id: string): Promise<{ ok: boolean; me
       await prisma.product.update({ where: { id }, data: { isActive: false } }).catch(() => {})
       revalidatePath("/admin/productos")
       return { ok: true, message: "Tiene referencias — desactivado en su lugar." }
+    }
+    if (msg.includes("No autorizado")) {
+      return { ok: false, message: "Sesión expirada. Recarga la página." }
     }
     return { ok: false, message: "Error al eliminar el producto" }
   }
