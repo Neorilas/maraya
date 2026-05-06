@@ -50,7 +50,17 @@
       "Bash(pip install *)",
       "Bash(python -c \"import boto3; print\\('boto3', boto3.__version__\\)\")",
       "Bash(node -e \"console.log\\('aws-sdk s3:', require\\('@aws-sdk/client-s3/package.json'\\).version\\)\")",
-      "Bash(curl -sS -o /c/temp/envios.html -w \"/admin/envios → HTTP %{http_code}, %{size_download} bytes\\\\n\" -b /tmp/cookies.txt http://localhost:3000/admin/envios)"
+      "Bash(curl -sS -o /c/temp/envios.html -w \"/admin/envios → HTTP %{http_code}, %{size_download} bytes\\\\n\" -b /tmp/cookies.txt http://localhost:3000/admin/envios)",
+      "Bash(netsh int *)",
+      "Bash(findstr :5432)",
+      "PowerShell(Get-CimInstance Win32_Process -Filter \"ProcessId=16156\")",
+      "Bash(git commit -m ' *)",
+      "Bash(git add *)",
+      "Bash(xargs grep *)",
+      "Bash(npx tsc *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx tsx -e ' *)",
+      "Bash(ssh maraya *)"
     ]
   }
 }
