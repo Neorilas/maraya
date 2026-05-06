@@ -13,9 +13,13 @@ export function DeleteProductButton({ id, name }: { id: string; name: string }) 
   function onClick() {
     if (!confirm(`¿Eliminar el producto "${name}"?\n\nSi está en pedidos, se desactivará en lugar de borrar.`)) return
     start(async () => {
-      const res = await deleteProductAction(id)
-      setFeedback(res)
-      if (res.ok) router.refresh()
+      try {
+        const res = await deleteProductAction(id)
+        setFeedback(res)
+        if (res.ok) router.refresh()
+      } catch {
+        setFeedback({ ok: false, message: "Error de conexión. Recarga e inténtalo de nuevo." })
+      }
     })
   }
 
