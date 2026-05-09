@@ -81,6 +81,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | `/api/shipping/quote` | `app/api/shipping/quote/route.ts` | Cliente del checkout pide coste por país+subtotal |
 | `/api/checkout/create-payment-intent` | `app/api/checkout/create-payment-intent/route.ts` | Crea pedido PENDIENTE + PI Stripe |
 | `/api/stripe/webhook` | `app/api/stripe/webhook/route.ts` | Procesa `payment_intent.succeeded`, `payment_failed`, `charge.refunded` |
+| `/api/upload` | `app/api/upload/route.ts` | POST: recibe imagen, convierte a WebP con sharp, guarda en disco local |
+| `/api/uploads/*` | `app/api/uploads/[...path]/route.ts` | GET: sirve imágenes subidas con cache immutable |
 
 ### Otros archivos en raíz
 - `proxy.ts` — Next 16 reemplaza `middleware.ts`. Protege `/admin/*` con `auth()`.
@@ -247,12 +249,14 @@ Forms que la editan (parten el schema en dos vistas):
 - Server actions: `lib/admin/shipping-zones.ts` (`saveShippingZone`, `createShippingZone`, `deleteShippingZone`).
 - Página: `app/admin/(panel)/envios/page.tsx`.
 
-### ☁️ S3 (subida imágenes)
+### 📸 Subida de imágenes (almacenamiento local)
 
-- Cliente lazy: `lib/s3.ts` (`s3()`, `bucketName()`, `publicUrl(key)`, `publicBaseUrl()`).
-- Server action presigned: `lib/admin/uploads.ts` → `getProductImageUploadUrl`.
-- Componente cliente uploader: `components/admin/products/ProductImagesField.tsx`.
-- Vars `.env`: `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, opcional `S3_PUBLIC_URL`.
+- API upload: `app/api/upload/route.ts` — POST recibe archivo, convierte a WebP con sharp, guarda en `UPLOAD_DIR` (default `./uploads`).
+- API serve: `app/api/uploads/[...path]/route.ts` — GET sirve archivos con `Cache-Control: immutable`.
+- Componente cliente uploader: `components/admin/products/ProductImagesField.tsx` — POST a `/api/upload`, sin S3.
+- Docker: volumen persistente `maraya_uploads` montado en `/app/uploads` (sobrevive a redeploys).
+- Las URLs de imágenes en BD son paths relativos tipo `/api/uploads/1234-abc.webp`.
+- Legacy S3: `lib/s3.ts` y `lib/admin/uploads.ts` siguen existiendo como fallback pero no se usan.
 
 ### 🛠️ Utils generales
 
