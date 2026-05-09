@@ -13,7 +13,7 @@ export async function Header() {
         {/* fila: buscador izq | logo centro | acciones dcha */}
         <div className="flex items-center justify-between gap-2 py-1.5 sm:py-2 lg:py-3">
           {/* Buscador a la izquierda (md+) / botón lupa (móvil) */}
-          <div className="flex items-center w-1/4 shrink-0">
+          <div className="flex items-center w-1/6 shrink-0">
             <form
               action="/bolsos"
               className="hidden md:flex w-full max-w-xs items-center gap-2 bg-pink-light/50 border border-pink-light rounded-full px-4 py-2 focus-within:border-pink-primary transition"
@@ -43,13 +43,13 @@ export async function Header() {
               width={800}
               height={200}
               priority
-              sizes="(max-width: 640px) 60vw, (max-width: 1024px) 320px, 400px"
-              className="h-16 sm:h-20 lg:h-24 w-auto max-w-full transition-transform group-hover:scale-105 drop-shadow-[0_2px_4px_rgba(244,114,182,0.25)]"
+              sizes="(max-width: 640px) 70vw, (max-width: 1024px) 400px, 500px"
+              className="h-20 sm:h-24 lg:h-32 w-auto max-w-full transition-transform group-hover:scale-105 drop-shadow-[0_2px_4px_rgba(244,114,182,0.25)]"
             />
           </Link>
 
           {/* Acciones a la derecha */}
-          <div className="flex items-center justify-end gap-1 sm:gap-2 w-1/4 shrink-0">
+          <div className="flex items-center justify-end gap-1 sm:gap-2 w-1/6 shrink-0">
             <Link
               href="/admin/login"
               prefetch={false}
