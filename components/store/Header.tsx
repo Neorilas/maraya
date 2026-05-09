@@ -10,12 +10,32 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gold/30 shadow-[0_2px_12px_rgba(244,114,182,0.08)]">
       <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 relative">
-        {/* fila logo / search / acciones */}
-        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3 py-1.5 sm:py-2 lg:py-3">
+        {/* fila: buscador izq | logo centro | acciones dcha */}
+        <div className="flex items-center justify-between gap-2 py-1.5 sm:py-2 lg:py-3">
+          {/* Buscador a la izquierda (md+) / botón lupa (móvil) */}
+          <div className="flex items-center w-1/4 shrink-0">
+            <form
+              action="/bolsos"
+              className="hidden md:flex w-full max-w-xs items-center gap-2 bg-pink-light/50 border border-pink-light rounded-full px-4 py-2 focus-within:border-pink-primary transition"
+            >
+              <Search className="w-4 h-4 text-pink-deep shrink-0" />
+              <input
+                type="search"
+                name="q"
+                placeholder="Buscar bolsos, modelos, colores…"
+                className="flex-1 bg-transparent text-sm placeholder:text-text-mid outline-none min-w-0"
+              />
+            </form>
+            <div className="md:hidden">
+              <MobileSearchButton />
+            </div>
+          </div>
+
+          {/* Logo centrado */}
           <Link
             href="/"
             aria-label="Maraya — Inicio"
-            className="flex items-center shrink-0 group max-sm:w-full max-sm:justify-center"
+            className="flex items-center justify-center flex-1 group"
           >
             <Image
               src="/maraya-logo.png"
@@ -23,29 +43,13 @@ export async function Header() {
               width={800}
               height={200}
               priority
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 240px, 280px"
-              className="max-sm:w-full max-sm:max-w-sm max-sm:h-auto sm:h-20 lg:h-24 w-auto transition-transform group-hover:scale-105 drop-shadow-[0_2px_4px_rgba(244,114,182,0.25)]"
+              sizes="(max-width: 640px) 60vw, (max-width: 1024px) 320px, 400px"
+              className="h-16 sm:h-20 lg:h-24 w-auto max-w-full transition-transform group-hover:scale-105 drop-shadow-[0_2px_4px_rgba(244,114,182,0.25)]"
             />
           </Link>
 
-          {/* Buscador inline en md+ (en mobile lo abre MobileSearchButton) */}
-          <form
-            action="/bolsos"
-            className="hidden md:flex flex-1 max-w-md items-center gap-2 bg-pink-light/50 border border-pink-light rounded-full px-4 py-2 focus-within:border-pink-primary transition"
-          >
-            <Search className="w-4 h-4 text-pink-deep shrink-0" />
-            <input
-              type="search"
-              name="q"
-              placeholder="Buscar bolsos, modelos, colores…"
-              className="flex-1 bg-transparent text-sm placeholder:text-text-mid outline-none min-w-0"
-            />
-          </form>
-
-          <div className="flex items-center gap-1 sm:gap-2">
-            <MobileSearchButton />
-
-            {/* Mi cuenta: icono solo en móvil, icono+texto en lg */}
+          {/* Acciones a la derecha */}
+          <div className="flex items-center justify-end gap-1 sm:gap-2 w-1/4 shrink-0">
             <Link
               href="/admin/login"
               prefetch={false}
