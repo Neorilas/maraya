@@ -4,7 +4,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import crypto from "node:crypto"
 import { auth } from "@/lib/auth"
-import { s3, bucketName, publicUrl } from "@/lib/s3"
+import { s3, bucketName, publicUrl, isS3Configured } from "@/lib/s3"
 
 const ALLOWED_MIME = new Set([
   "image/jpeg",
@@ -38,6 +38,10 @@ export async function getProductImageUploadUrl(input: {
 }): Promise<PresignResult> {
   const session = await auth()
   if (!session?.user) return { ok: false, error: "No autorizado" }
+
+  if (!isS3Configured()) {
+    return { ok: false, error: "Almacenamiento S3 no configurado. Añade las variables S3_* en .env" }
+  }
 
   if (!ALLOWED_MIME.has(input.contentType)) {
     return { ok: false, error: `Formato no permitido: ${input.contentType}` }

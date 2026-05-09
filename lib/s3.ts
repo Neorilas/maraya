@@ -13,6 +13,16 @@ import { S3Client } from "@aws-sdk/client-s3"
  *   S3_PUBLIC_URL        (opcional) URL pública para servir, ej. https://BUCKET.REGION.your-objectstorage.com
  */
 
+export function isS3Configured(): boolean {
+  return !!(
+    process.env.S3_REGION &&
+    process.env.S3_ENDPOINT &&
+    process.env.S3_BUCKET &&
+    process.env.S3_ACCESS_KEY_ID &&
+    process.env.S3_SECRET_ACCESS_KEY
+  )
+}
+
 function need(name: string): string {
   const v = process.env[name]
   if (!v) throw new Error(`Falta variable de entorno: ${name}`)
