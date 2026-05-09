@@ -1,7 +1,7 @@
 "use client"
 
-import { useActionState, useState } from "react"
-import { Save, Loader2, CheckCircle2, AlertCircle } from "lucide-react"
+import { useActionState, useState, useEffect, useRef, useCallback } from "react"
+import { Save, Loader2 } from "lucide-react"
 import {
   Input,
   Textarea,
@@ -9,6 +9,7 @@ import {
   Toggle,
 } from "@/components/admin/forms/Field"
 import { ProductImagesField } from "./ProductImagesField"
+import { Toast, type ToastData } from "@/components/admin/Toast"
 import {
   createProductAction,
   updateProductAction,
@@ -61,6 +62,28 @@ export function ProductForm({
   const [slug, setSlug] = useState(defaults.slug)
   const [slugTouched, setSlugTouched] = useState(mode === "edit")
 
+  // Toast + form reset
+  const [toast, setToast] = useState<ToastData | null>(null)
+  const [imageResetKey, setImageResetKey] = useState(0)
+  const formRef = useRef<HTMLFormElement>(null)
+  const dismissToast = useCallback(() => setToast(null), [])
+
+  useEffect(() => {
+    if (pending || !state.message) return
+    if (state.ok) {
+      setToast({ message: state.message, type: "success" })
+      if (mode === "create") {
+        setName("")
+        setSlug("")
+        setSlugTouched(false)
+        setImageResetKey((k) => k + 1)
+        formRef.current?.reset()
+      }
+    } else {
+      setToast({ message: state.message, type: "error" })
+    }
+  }, [state, pending, mode])
+
   function onNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     const v = e.target.value
     setName(v)
@@ -68,7 +91,9 @@ export function ProductForm({
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <>
+    <Toast toast={toast} onDismiss={dismissToast} />
+    <form ref={formRef} action={formAction} className="space-y-6">
       {defaults.id && <input type="hidden" name="id" value={defaults.id} />}
 
       <div className="card-maraya p-5 sm:p-6 space-y-4">
@@ -168,6 +193,7 @@ export function ProductForm({
       <div className="card-maraya p-5 sm:p-6 space-y-4">
         <h2 className="font-display !text-text-dark text-lg">Imágenes</h2>
         <ProductImagesField
+          key={imageResetKey}
           initial={defaults.images}
           initialAlts={defaults.imagesAlt}
           error={errors.images}
@@ -189,7 +215,6 @@ export function ProductForm({
       </div>
 
       <div className="sticky bottom-0 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-3 bg-cream/95 backdrop-blur border-t border-pink-light flex items-center justify-end gap-3 z-20">
-        <Flash state={state} pending={pending} />
         <button
           type="submit"
           disabled={pending}
@@ -208,27 +233,6 @@ export function ProductForm({
         </button>
       </div>
     </form>
-  )
-}
-
-function Flash({
-  state,
-  pending,
-}: {
-  state: ProductFormState
-  pending: boolean
-}) {
-  if (pending || !state.message) return null
-  const tone = state.ok
-    ? "text-emerald-700 bg-emerald-50 border-emerald-200"
-    : "text-red-700 bg-red-50 border-red-200"
-  const Icon = state.ok ? CheckCircle2 : AlertCircle
-  return (
-    <div
-      className={`flex items-center gap-2 text-sm font-semibold px-3 py-1.5 rounded-full border ${tone}`}
-    >
-      <Icon className="w-4 h-4" />
-      {state.message}
-    </div>
+    </>
   )
 }

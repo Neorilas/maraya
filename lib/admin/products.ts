@@ -1,7 +1,6 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { redirect } from "next/navigation"
 import type { ZodIssue } from "zod"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
@@ -37,7 +36,7 @@ function normalizeImagesAlt(images: string[], alts: string[]): string[] {
   return Array.from({ length: images.length }, (_, i) => alts[i] ?? "")
 }
 
-/** Crea un producto. Tras éxito, redirige a la edición del nuevo. */
+/** Crea un producto. Tras éxito devuelve ok para que el form muestre toast y se resetee. */
 export async function createProductAction(
   _prev: ProductFormState,
   fd: FormData,
@@ -61,10 +60,8 @@ export async function createProductAction(
     ...parsed.data,
     imagesAlt: normalizeImagesAlt(parsed.data.images, parsed.data.imagesAlt),
   }
-  let id: string
   try {
-    const created = await prisma.product.create({ data })
-    id = created.id
+    await prisma.product.create({ data })
   } catch (err) {
     const msg = err instanceof Error ? err.message : ""
     if (msg.includes("Unique") && msg.includes("sku")) {
@@ -77,7 +74,8 @@ export async function createProductAction(
   }
 
   revalidatePath("/admin/productos")
-  redirect(`/admin/productos/${id}?ok=1`)
+  revalidatePath("/bolsos", "layout")
+  return { ok: true, message: `Producto «${parsed.data.name}» creado` }
 }
 
 export async function updateProductAction(
