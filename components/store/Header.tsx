@@ -38,7 +38,7 @@ export async function Header() {
             className="flex items-center justify-center flex-1 group"
           >
             <Image
-              src="/maraya-logo.png"
+              src="/maraya-logo.jpeg"
               alt="Maraya by Maraya Bags"
               width={800}
               height={200}

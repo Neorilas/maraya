@@ -60,7 +60,10 @@
       "Bash(npx tsc *)",
       "mcp__Claude_Preview__preview_start",
       "Bash(npx tsx -e ' *)",
-      "Bash(ssh maraya *)"
+      "Bash(ssh maraya *)",
+      "Bash(ssh -o ConnectTimeout=10 maraya \"grep -r 'upload\\\\|multer\\\\|sharp\\\\|image\\\\|storage\\\\|S3\\\\|cloudinary' /root/fundacion/backend/package.json 2>/dev/null; echo '---'; grep -r 'upload' /root/fundacion/backend/src/ --include='*.ts' --include='*.js' -l 2>/dev/null; echo '---'; ls /root/fundacion/backend/src/ 2>/dev/null\")",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "PowerShell(Remove-Item \"C:\\\\proyectos\\\\maraya\\\\public\\\\maraya-logo.png\" -Confirm:$false)"
     ]
   }
 }
