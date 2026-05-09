@@ -50,7 +50,7 @@ const baseSchema = {
   stock: z.coerce.number().int().min(0).max(100000),
   category: z.preprocess(emptyToNull, z.string().nullable()),
   tags: z.preprocess(tagsPreprocess, z.array(z.string()).max(20)),
-  images: z.preprocess(imagesPreprocess, z.array(z.string().url("URL inválida")).max(8)),
+  images: z.preprocess(imagesPreprocess, z.array(z.string().min(1, "URL inválida")).max(8)),
   imagesAlt: z.preprocess(
     imagesAltPreprocess,
     z.array(z.string().max(200)).max(8),

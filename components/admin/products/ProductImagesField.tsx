@@ -271,7 +271,7 @@ function ItemCard({
               {item.error ?? "Error"}
             </span>
           </div>
-        ) : item.url.startsWith("http") ? (
+        ) : item.url.startsWith("http") || item.url.startsWith("/") ? (
           <>
             <Image
               src={item.url}
