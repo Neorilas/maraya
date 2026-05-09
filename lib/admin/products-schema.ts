@@ -44,7 +44,11 @@ const baseSchema = {
   description: z.string().min(1, "Obligatorio"),
   price: z.coerce.number().min(0.01, "Debe ser > 0").max(100000),
   salePrice: z.preprocess(
-    emptyToNull,
+    (v) => {
+      if (typeof v === "string" && v.trim() === "") return null
+      const n = Number(v)
+      return n === 0 || Number.isNaN(n) ? null : v
+    },
     z.coerce.number().min(0).max(100000).nullable(),
   ),
   stock: z.coerce.number().int().min(0).max(100000),
