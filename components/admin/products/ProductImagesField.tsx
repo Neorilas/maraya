@@ -4,7 +4,6 @@ import { useRef, useState } from "react"
 import Image from "next/image"
 import { UploadCloud, X, Loader2, AlertCircle, Plus, ImagePlus } from "lucide-react"
 import { FieldShell } from "@/components/admin/forms/Field"
-import { getProductImageUploadUrl } from "@/lib/admin/uploads"
 
 type ItemStatus = "ready" | "uploading" | "error"
 type Item = {
@@ -66,21 +65,10 @@ export function ProductImagesField({
       ),
     )
     try {
-      const presign = await getProductImageUploadUrl({
-        filename: file.name,
-        contentType: file.type,
-        size: file.size,
-      })
-      if (!presign.ok) throw new Error(presign.error)
-      const put = await fetch(presign.uploadUrl, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type, "x-amz-acl": "public-read" },
-      })
-      if (!put.ok) throw new Error(`Subida fallida (${put.status})`)
+      const url = await doUpload(file)
       setItems((xs) =>
         xs.map((it, i) =>
-          i === idx ? { ...it, url: presign.publicUrl, status: "ready" } : it,
+          i === idx ? { ...it, url, status: "ready" } : it,
         ),
       )
     } catch (err) {
@@ -111,8 +99,16 @@ export function ProductImagesField({
     setPasteUrl("")
   }
 
+  async function doUpload(file: File): Promise<string> {
+    const fd = new FormData()
+    fd.append("file", file)
+    const res = await fetch("/api/upload", { method: "POST", body: fd })
+    const data = await res.json()
+    if (!data.ok) throw new Error(data.error || "Error al subir imagen")
+    return data.url
+  }
+
   async function uploadFile(file: File) {
-    // Item temporal mientras subimos
     const tempUrl = URL.createObjectURL(file)
     let tempIdx = -1
     setItems((xs) => {
@@ -121,25 +117,10 @@ export function ProductImagesField({
     })
 
     try {
-      const presign = await getProductImageUploadUrl({
-        filename: file.name,
-        contentType: file.type,
-        size: file.size,
-      })
-      if (!presign.ok) throw new Error(presign.error)
-
-      const put = await fetch(presign.uploadUrl, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type, "x-amz-acl": "public-read" },
-      })
-      if (!put.ok) throw new Error(`Subida fallida (${put.status})`)
-
+      const url = await doUpload(file)
       setItems((xs) =>
         xs.map((it, i) =>
-          i === tempIdx
-            ? { ...it, url: presign.publicUrl, status: "ready" }
-            : it,
+          i === tempIdx ? { ...it, url, status: "ready" } : it,
         ),
       )
     } catch (err) {
