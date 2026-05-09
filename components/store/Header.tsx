@@ -11,20 +11,20 @@ export async function Header() {
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gold/30 shadow-[0_2px_12px_rgba(244,114,182,0.08)]">
       <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 relative">
         {/* fila logo / search / acciones */}
-        <div className="flex items-center justify-between gap-2 sm:gap-3 py-1.5 sm:py-2 lg:py-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3 py-1.5 sm:py-2 lg:py-3">
           <Link
             href="/"
             aria-label="Maraya — Inicio"
-            className="flex items-center shrink-0 group"
+            className="flex items-center shrink-0 group max-sm:w-full max-sm:justify-center"
           >
             <Image
               src="/maraya-logo.png"
               alt="Maraya by Maraya Bags"
-              width={420}
-              height={420}
+              width={800}
+              height={200}
               priority
-              sizes="(max-width: 640px) 96px, (max-width: 1024px) 96px, 112px"
-              className="h-24 sm:h-24 lg:h-28 w-auto transition-transform group-hover:scale-105 drop-shadow-[0_2px_4px_rgba(244,114,182,0.25)]"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 240px, 280px"
+              className="max-sm:w-full max-sm:max-w-sm max-sm:h-auto sm:h-20 lg:h-24 w-auto transition-transform group-hover:scale-105 drop-shadow-[0_2px_4px_rgba(244,114,182,0.25)]"
             />
           </Link>
 
