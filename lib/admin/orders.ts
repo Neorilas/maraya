@@ -30,6 +30,7 @@ const updateSchema = z.object({
   status: statusEnum,
   note: z.string().max(500).optional(),
   trackingNumber: z.string().max(80).optional(),
+  shippingCompany: z.string().max(80).optional(),
 })
 
 export type ActionResult = {
@@ -57,52 +58,64 @@ export async function updateOrderStatus(
   _prev: ActionResult,
   fd: FormData,
 ): Promise<ActionResult> {
-  await requireSession()
+  try {
+    await requireSession()
+  } catch {
+    return { ok: false, message: "Sesión expirada. Recarga la página." }
+  }
+
   const parsed = updateSchema.safeParse(fdToObj(fd))
   if (!parsed.success) {
     return { ok: false, message: "Datos inválidos" }
   }
-  const { orderId, status, note, trackingNumber } = parsed.data
+  const { orderId, status, note, trackingNumber, shippingCompany } = parsed.data
 
-  const current = await prisma.order.findUnique({
-    where: { id: orderId },
-    select: { status: true },
-  })
-  if (!current) return { ok: false, message: "Pedido no encontrado" }
-  if (current.status === status && !trackingNumber && !note) {
-    return { ok: true, message: "Sin cambios" }
-  }
-
-  await prisma.$transaction([
-    prisma.order.update({
+  try {
+    const current = await prisma.order.findUnique({
       where: { id: orderId },
-      data: {
-        status,
-        ...(trackingNumber !== undefined && trackingNumber !== ""
-          ? { trackingNumber }
-          : {}),
-      },
-    }),
-    prisma.orderStatusHistory.create({
-      data: {
-        orderId,
-        status,
-        note: note?.trim() || null,
-      },
-    }),
-  ])
-
-  // Email al cliente si aplica (no bloqueamos la action si falla el envío)
-  if (STATUSES_THAT_NOTIFY.has(status as never)) {
-    try {
-      await sendStatusUpdateEmail(orderId, status as Parameters<typeof sendStatusUpdateEmail>[1])
-    } catch (err) {
-      console.error("[admin orders] error enviando email update:", err)
+      select: { status: true },
+    })
+    if (!current) return { ok: false, message: "Pedido no encontrado" }
+    if (current.status === status && !trackingNumber && !shippingCompany && !note) {
+      return { ok: true, message: "Sin cambios" }
     }
-  }
 
-  revalidatePath("/admin/pedidos")
-  revalidatePath(`/admin/pedidos/${orderId}`)
-  revalidatePath(`/seguimiento/[orderNumber]`, "page")
-  return { ok: true, message: "Estado actualizado" }
+    const orderData: Record<string, unknown> = { status }
+    if (trackingNumber !== undefined && trackingNumber !== "") {
+      orderData.trackingNumber = trackingNumber
+    }
+    if (shippingCompany !== undefined && shippingCompany !== "") {
+      orderData.shippingCompany = shippingCompany
+    }
+
+    await prisma.$transaction([
+      prisma.order.update({
+        where: { id: orderId },
+        data: orderData,
+      }),
+      prisma.orderStatusHistory.create({
+        data: {
+          orderId,
+          status,
+          note: note?.trim() || null,
+        },
+      }),
+    ])
+
+    if (STATUSES_THAT_NOTIFY.has(status as never)) {
+      try {
+        await sendStatusUpdateEmail(orderId, status as Parameters<typeof sendStatusUpdateEmail>[1])
+      } catch (err) {
+        console.error("[admin orders] error enviando email update:", err)
+      }
+    }
+
+    revalidatePath("/admin/pedidos")
+    revalidatePath(`/admin/pedidos/${orderId}`)
+    revalidatePath(`/seguimiento/[orderNumber]`, "page")
+    return { ok: true, message: "Estado actualizado" }
+  } catch (err) {
+    console.error("[admin orders] error actualizando estado:", err)
+    return { ok: false, message: "Error al actualizar el estado. Inténtalo de nuevo." }
+  }
 }

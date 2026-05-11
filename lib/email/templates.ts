@@ -126,13 +126,20 @@ export function customerStatusUpdate({
   status,
   trackingUrl,
   trackingNumber,
+  shippingCompany,
 }: {
   orderNumber: string
   customerName: string
   status: "EN_PREPARACION" | "ENVIADO" | "ENTREGADO" | "CANCELADO" | "REEMBOLSADO"
   trackingUrl: string
   trackingNumber?: string | null
+  shippingCompany?: string | null
 }): { subject: string; html: string } {
+  const shippingLine = [
+    shippingCompany ? `Enviado con <strong>${escapeHtml(shippingCompany)}</strong>` : null,
+    trackingNumber ? `N.º de seguimiento: <strong>${escapeHtml(trackingNumber)}</strong>` : null,
+  ].filter(Boolean).join(". ")
+
   const COPY: Record<typeof status, { subject: string; title: string; body: string }> = {
     EN_PREPARACION: {
       subject: `Estamos preparando tu pedido 🎀 #${orderNumber}`,
@@ -142,8 +149,8 @@ export function customerStatusUpdate({
     ENVIADO: {
       subject: `¡Tu Maraya está en camino! 🚚 #${orderNumber}`,
       title: "Tu pedido sale de viaje",
-      body: trackingNumber
-        ? `Número de seguimiento: <strong>${escapeHtml(trackingNumber)}</strong>. Llega en breve.`
+      body: shippingLine
+        ? `${shippingLine}. Llega en breve.`
         : "En breve estará en tus manos.",
     },
     ENTREGADO: {

@@ -83,7 +83,7 @@ export async function sendStatusUpdateEmail(
     where: { id: orderId },
     select: {
       orderNumber: true, firstName: true, lastName: true, email: true,
-      trackingNumber: true, trackingToken: true,
+      trackingNumber: true, shippingCompany: true, trackingToken: true,
     },
   })
   if (!order) return { ok: false, error: "Pedido no encontrado" }
@@ -97,6 +97,7 @@ export async function sendStatusUpdateEmail(
     status,
     trackingUrl,
     trackingNumber: order.trackingNumber,
+    shippingCompany: order.shippingCompany,
   })
   return sendEmail({ to: order.email, subject, html })
 }

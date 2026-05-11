@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, MapPin, User, Mail, Phone, FileText, CreditCard } from "lucide-react"
+import { ArrowLeft, MapPin, User, Mail, Phone, FileText, CreditCard, Truck } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { OrderStatusBadge, type OrderStatus } from "@/components/admin/OrderStatusBadge"
 import { OrderStatusForm } from "@/components/admin/orders/OrderStatusForm"
@@ -124,6 +124,7 @@ export default async function PedidoDetailPage({
             orderId={o.id}
             currentStatus={o.status as OrderStatus}
             trackingNumber={o.trackingNumber}
+            shippingCompany={o.shippingCompany}
           />
 
           <section className="card-maraya p-4 sm:p-5 space-y-3 text-sm">
@@ -146,6 +147,20 @@ export default async function PedidoDetailPage({
               <span className="whitespace-pre-line">{fullAddress}</span>
             </Detail>
           </section>
+
+          {(o.trackingNumber || o.shippingCompany) && (
+            <section className="card-maraya p-4 sm:p-5 space-y-2 text-sm">
+              <h2 className="font-display !text-text-dark text-lg">Envío</h2>
+              {o.shippingCompany && (
+                <Detail icon={Truck} label="Compañía" value={o.shippingCompany} />
+              )}
+              {o.trackingNumber && (
+                <Detail icon={Truck} label="Nº seguimiento">
+                  <span className="font-mono text-xs break-all">{o.trackingNumber}</span>
+                </Detail>
+              )}
+            </section>
+          )}
 
           {o.stripePaymentId && (
             <section className="card-maraya p-4 sm:p-5 space-y-2 text-sm">

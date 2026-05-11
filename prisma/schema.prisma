@@ -53,9 +53,10 @@ model Order {
   stripePaymentId String?
   paidAt          DateTime?
 
-  shippingZone   String
-  trackingNumber String?
-  trackingToken  String?  @unique
+  shippingZone    String
+  trackingNumber  String?
+  shippingCompany String?
+  trackingToken   String?  @unique
 
   items         OrderItem[]
   statusHistory OrderStatusHistory[]

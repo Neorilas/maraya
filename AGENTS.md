@@ -271,7 +271,7 @@ Forms que la editan (parten el schema en dos vistas):
 | Modelo | Función | Único | Notas |
 |--------|---------|-------|-------|
 | `Product` | Catálogo bolsos | `sku`, `slug` | `images: String[]`, `imagesAlt: String[]` (paralelo, alt SEO por imagen), `tags: String[]`, soft delete vía `isActive` cuando hay pedidos |
-| `Order` | Pedido cliente | `orderNumber` (`MAR-YYYY-NNNN`), `trackingToken` (UUID) | `status: OrderStatus`, items en relación, `trackingToken` securiza URLs de seguimiento, transacción de descuento stock en `markOrderAsPaid` |
+| `Order` | Pedido cliente | `orderNumber` (`MAR-YYYY-NNNN`), `trackingToken` (UUID) | `status: OrderStatus`, items en relación, `trackingToken` securiza URLs de seguimiento, `shippingCompany` y `trackingNumber` se rellenan al marcar ENVIADO, transacción de descuento stock en `markOrderAsPaid` |
 | `OrderItem` | Línea pedido | — | `productName` y `price` snapshot al momento de pedir |
 | `OrderStatusHistory` | Timeline | — | Append-only, lo escriben las server actions de orders |
 | `ShippingZone` | Tarifas | `code` | `code: SPAIN/BALEARES/CANARIAS/EUROPE/USA/OTHER/<custom>`, `freeFrom: Float?` |
@@ -291,6 +291,7 @@ Forms que la editan (parten el schema en dos vistas):
 5. `20260505_image_alt_fields` — `HomeCollection.imageAlt`, `Product.imagesAlt`.
 6. `20260505191740_images_alt` — auto-generada por Prisma (drift fix de la anterior).
 7. `20260512_tracking_token` — `trackingToken` UUID en `Order` + backfill + unique index.
+8. `20260512_shipping_company` — `shippingCompany` nullable en `Order`.
 
 **Seeds (`prisma/seeds/*.ts`):**
 - `shipping-zones.ts` — 6 zonas (upsert por `code`).

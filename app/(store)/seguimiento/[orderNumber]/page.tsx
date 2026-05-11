@@ -96,14 +96,28 @@ export default async function SeguimientoPage({
           </div>
         )}
 
-        {o.trackingNumber && status === "ENVIADO" && (
-          <div className="card-maraya gold-border p-4 mt-6 text-center">
-            <p className="text-xs uppercase tracking-wider font-bold text-text-mid">
-              Número de seguimiento
-            </p>
-            <p className="font-mono font-bold text-text-dark text-lg mt-1">
-              {o.trackingNumber}
-            </p>
+        {(o.trackingNumber || o.shippingCompany) && (status === "ENVIADO" || status === "ENTREGADO") && (
+          <div className="card-maraya gold-border p-4 mt-6 text-center space-y-2">
+            {o.shippingCompany && (
+              <>
+                <p className="text-xs uppercase tracking-wider font-bold text-text-mid">
+                  Compañía de envío
+                </p>
+                <p className="font-bold text-text-dark text-lg">
+                  {o.shippingCompany}
+                </p>
+              </>
+            )}
+            {o.trackingNumber && (
+              <>
+                <p className="text-xs uppercase tracking-wider font-bold text-text-mid">
+                  Número de seguimiento
+                </p>
+                <p className="font-mono font-bold text-text-dark text-lg">
+                  {o.trackingNumber}
+                </p>
+              </>
+            )}
           </div>
         )}
 
