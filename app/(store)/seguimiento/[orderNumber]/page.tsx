@@ -17,7 +17,7 @@ import { OrderStatusBadge, type OrderStatus } from "@/components/admin/OrderStat
 export const dynamic = "force-dynamic"
 
 export const metadata = {
-  title: "Seguimiento del pedido · Maraya Store",
+  title: "Seguimiento del pedido · Maraya Collection",
   robots: { index: false, follow: false },
 }
 
@@ -49,15 +49,19 @@ const STATUS_META: Record<
 
 export default async function SeguimientoPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ orderNumber: string }>
+  searchParams: Promise<{ token?: string }>
 }) {
   const { orderNumber } = await params
+  const { token } = await searchParams
   const o = await prisma.order.findUnique({
     where: { orderNumber },
     include: { items: true, statusHistory: { orderBy: { createdAt: "asc" } } },
   })
   if (!o) notFound()
+  if (o.trackingToken && token !== o.trackingToken) notFound()
 
   const status = o.status as OrderStatus
   const isCancelled = status === "CANCELADO" || status === "REEMBOLSADO"

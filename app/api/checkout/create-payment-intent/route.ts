@@ -99,6 +99,7 @@ export async function POST(req: Request) {
     clientSecret: intent.client_secret,
     orderId: order.id,
     orderNumber: order.orderNumber,
+    trackingToken: order.trackingToken,
     total: order.total,
   })
 }

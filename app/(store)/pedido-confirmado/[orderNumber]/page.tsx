@@ -8,7 +8,7 @@ import { OrderStatusPoller } from "@/components/store/OrderStatusPoller"
 export const dynamic = "force-dynamic"
 
 export const metadata = {
-  title: "Pedido confirmado · Maraya Store",
+  title: "Pedido confirmado · Maraya Collection",
   robots: { index: false, follow: false },
 }
 
@@ -19,7 +19,7 @@ export default async function PedidoConfirmadoPage({
   searchParams,
 }: {
   params: Promise<{ orderNumber: string }>
-  searchParams: Promise<{ payment_intent?: string; redirect_status?: string }>
+  searchParams: Promise<{ payment_intent?: string; redirect_status?: string; token?: string }>
 }) {
   const { orderNumber } = await params
   const sp = await searchParams
@@ -29,6 +29,7 @@ export default async function PedidoConfirmadoPage({
     include: { items: true },
   })
   if (!order) notFound()
+  if (order.trackingToken && sp.token !== order.trackingToken) notFound()
 
   const isPaid = order.status !== "PENDIENTE" && order.status !== "CANCELADO"
   const isPending = order.status === "PENDIENTE"
@@ -99,7 +100,7 @@ export default async function PedidoConfirmadoPage({
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Link
-              href={`/seguimiento/${order.orderNumber}`}
+              href={`/seguimiento/${order.orderNumber}${order.trackingToken ? `?token=${order.trackingToken}` : ""}`}
               className="btn-pill btn-pink"
             >
               Seguir mi pedido

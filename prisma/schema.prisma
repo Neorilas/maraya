@@ -55,6 +55,7 @@ model Order {
 
   shippingZone   String
   trackingNumber String?
+  trackingToken  String?  @unique
 
   items         OrderItem[]
   statusHistory OrderStatusHistory[]

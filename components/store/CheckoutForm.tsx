@@ -176,10 +176,10 @@ function CheckoutFormInner() {
       return
     }
 
-    const { clientSecret, orderNumber } = intentData
+    const { clientSecret, orderNumber, trackingToken } = intentData
 
     // 3) Confirmar el pago. Stripe redirige a return_url al éxito.
-    const returnUrl = `${window.location.origin}/pedido-confirmado/${orderNumber}`
+    const returnUrl = `${window.location.origin}/pedido-confirmado/${orderNumber}?token=${trackingToken}`
     const { error: confirmError } = await stripe.confirmPayment({
       elements,
       clientSecret,

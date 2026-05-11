@@ -24,7 +24,7 @@ const SHELL = (inner: string, preview = "") => `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Maraya Store</title>
+<title>Maraya Collection</title>
 </head>
 <body style="margin:0;padding:0;background:#FFF8F0;font-family:Nunito,Arial,sans-serif;color:#1F1F1F;">
 <div style="display:none;max-height:0;overflow:hidden;">${preview}</div>
@@ -33,11 +33,11 @@ const SHELL = (inner: string, preview = "") => `<!doctype html>
   <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 14px rgba(31,31,31,0.06);">
     <tr><td style="background:linear-gradient(135deg,#FDE7F3 0%,#FFF8F0 50%,#CCFBF1 100%);padding:32px;text-align:center;border-bottom:2px solid #D4AF37;">
       <div style="font-family:Georgia,serif;font-size:42px;font-style:italic;color:#F472B6;line-height:1;">Maraya</div>
-      <div style="font-family:Georgia,serif;font-size:11px;letter-spacing:0.4em;color:#D4AF37;text-transform:uppercase;margin-top:6px;">Store</div>
+      <div style="font-family:Georgia,serif;font-size:11px;letter-spacing:0.4em;color:#D4AF37;text-transform:uppercase;margin-top:6px;">Collection</div>
     </td></tr>
     ${inner}
     <tr><td style="background:#1F1F1F;color:#fff;padding:24px;text-align:center;font-size:12px;">
-      <p style="margin:0 0 4px 0;">© Maraya Store · Hecho con ♡ en España</p>
+      <p style="margin:0 0 4px 0;">© Maraya Collection · Hecho con ♡ en España</p>
       <p style="margin:0;color:#bbb;">¿Dudas? Responde a este email y te ayudamos.</p>
     </td></tr>
   </table>

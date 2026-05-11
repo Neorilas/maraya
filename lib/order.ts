@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto"
 import { prisma } from "@/lib/prisma"
 
 /** Genera número de pedido correlativo por año: MAR-YYYY-NNNN */
@@ -82,10 +83,12 @@ export async function createPendingOrder({
 
   const total = round2(subtotal + shippingCost)
   const orderNumber = await generateOrderNumber()
+  const trackingToken = randomUUID()
 
   const order = await prisma.order.create({
     data: {
       orderNumber,
+      trackingToken,
       status: "PENDIENTE",
       firstName: customer.firstName,
       lastName: customer.lastName,
@@ -113,6 +116,7 @@ export async function createPendingOrder({
     select: {
       id: true,
       orderNumber: true,
+      trackingToken: true,
       total: true,
       email: true,
     },
