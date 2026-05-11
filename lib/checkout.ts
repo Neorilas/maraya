@@ -59,10 +59,6 @@ export const checkoutSchema = z.object({
   postalCode:   z.string().min(3, "Demasiado corto").max(15),
   country:      z.string().min(2, "Selecciona un país"),
 
-  // Aceptaciones
-  acceptTerms: z.preprocess((v) => v === "on" || v === true, z.boolean())
-                .refine((v) => v, "Tienes que aceptar los términos"),
-  acceptMarketing: z.preprocess((v) => v === "on" || v === true, z.boolean()),
 })
 
 export type CheckoutData = z.infer<typeof checkoutSchema>

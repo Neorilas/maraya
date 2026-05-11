@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { loadStripe, type Stripe } from "@stripe/stripe-js"
 import { Loader2, Lock, ArrowLeft, AlertCircle } from "lucide-react"
-import { Input, Select, Toggle } from "@/components/admin/forms/Field"
+import { Input, Select } from "@/components/admin/forms/Field"
 import { useCart } from "@/lib/store/cart"
 import { CHECKOUT_COUNTRIES, checkoutSchema, type CheckoutData } from "@/lib/checkout"
 import { CheckoutSummary, type ShippingState } from "./CheckoutSummary"
@@ -136,7 +136,6 @@ function CheckoutFormInner() {
     const fd = new FormData(e.currentTarget)
     const obj: Record<string, FormDataEntryValue> = {}
     for (const [k, v] of fd.entries()) obj[k] = v
-    // Toggles ausentes → undefined → zod preprocess los normaliza a false
 
     const parsed = checkoutSchema.safeParse(obj)
     if (!parsed.success) {
@@ -236,14 +235,6 @@ function CheckoutFormInner() {
 
         <Section title="Pago" cols={1}>
           <PaymentElement options={{ layout: "tabs" }} />
-        </Section>
-
-        <Section title="Confirma" cols={1}>
-          <Toggle name="acceptTerms" label="Acepto los términos y la política de privacidad" />
-          {errors.acceptTerms && (
-            <p className="text-xs text-red-600 -mt-1">{errors.acceptTerms}</p>
-          )}
-          <Toggle name="acceptMarketing" label="Quiero recibir novedades y descuentos por email" />
         </Section>
 
         {topError && (

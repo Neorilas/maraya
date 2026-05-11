@@ -25,7 +25,6 @@ export type OrderCustomerInput = {
   province: string
   postalCode: string
   country: string
-  acceptMarketing?: boolean
 }
 
 export type OrderItemInput = {
