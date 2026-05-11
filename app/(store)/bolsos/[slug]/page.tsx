@@ -76,6 +76,7 @@ export default async function ProductDetailPage({
               {p.stock > 0 ? (
                 <AddToCartButton
                   full
+                  showBuyNow
                   item={{
                     productId: p.id,
                     slug: p.slug,

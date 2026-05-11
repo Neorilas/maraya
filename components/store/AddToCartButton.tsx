@@ -1,24 +1,23 @@
 "use client"
 
 import { useState } from "react"
-import { ShoppingBag, Check, Minus, Plus } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { ShoppingBag, Check, Minus, Plus, Zap } from "lucide-react"
 import { useCart, type CartItem } from "@/lib/store/cart"
 
-/**
- * Botón añadir al carrito con selector de cantidad.
- * Acepta un `item` ya construido (sin quantity) — se la inyectamos al store.
- */
 export function AddToCartButton({
   item,
   disabled,
   full,
+  showBuyNow,
 }: {
   item: Omit<CartItem, "quantity">
   disabled?: boolean
-  /** Si true ocupa el ancho completo (móvil). */
   full?: boolean
+  showBuyNow?: boolean
 }) {
   const addItem = useCart((s) => s.addItem)
+  const router = useRouter()
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
   const max = item.stockAtAdd || 999
@@ -27,6 +26,11 @@ export function AddToCartButton({
     addItem(item, qty)
     setAdded(true)
     setTimeout(() => setAdded(false), 1500)
+  }
+
+  function buyNow() {
+    addItem(item, qty)
+    router.push("/checkout")
   }
 
   return (
@@ -57,6 +61,17 @@ export function AddToCartButton({
           </>
         )}
       </button>
+
+      {showBuyNow && (
+        <button
+          type="button"
+          onClick={buyNow}
+          disabled={disabled}
+          className={`btn-pill btn-gold ${full ? "w-full justify-center" : ""} disabled:opacity-60`}
+        >
+          <Zap className="w-4 h-4" /> Comprar ahora
+        </button>
+      )}
     </div>
   )
 }
