@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { CheckCircle2, Mail, Package, Clock } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { ClearCartOnMount } from "@/components/store/ClearCartOnMount"
+import { OrderStatusPoller } from "@/components/store/OrderStatusPoller"
 
 export const dynamic = "force-dynamic"
 
@@ -64,6 +65,7 @@ export default async function PedidoConfirmadoPage({
                   ? "Hubo un problema con el pago. Intenta de nuevo o usa otra tarjeta."
                   : "Esto suele tardar unos segundos. Si la página no se actualiza, recárgala."}
               </p>
+              {!failed && <OrderStatusPoller />}
             </>
           ) : (
             <>
