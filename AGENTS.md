@@ -16,7 +16,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## 0. Estado y deploy
 
-- **Producción staging:** https://maraya.91.107.235.70.nip.io (Caddy del proyecto `fundacion` hace reverse-proxy con SSL Let's Encrypt automático).
+- **Producción:** https://marayacollection.com (Caddy del proyecto `fundacion` hace reverse-proxy con SSL Let's Encrypt automático).
 - **Repo:** `git@github.com:Neorilas/maraya.git` (rama `main`).
 - **Hetzner:** alias SSH `maraya` (clave `~/.ssh/maraya_hetzner`). Postgres 16 + Next.js corren en Docker en `/root/maraya/`.
 - **Pipeline auto:** `.git/hooks/post-commit` hace `git push` y luego `ssh maraya /root/maraya/deploy.sh` (que pull + build + up). Cada commit en `main` despliega solo. **No** introducir cambios sin commit cuando el dev server local está corriendo, o quedarán solo en local.
@@ -56,7 +56,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | `/contacto` | `app/(store)/contacto/page.tsx` |
 | `/sobre-nosotros` | `app/(store)/sobre-nosotros/page.tsx` |
 
-`app/(store)/layout.tsx` declara `dynamic = "force-dynamic"` y mete `<TopBar><Header><main>{children}</main><Footer>`.
+`app/(store)/layout.tsx` declara `dynamic = "force-dynamic"`, inyecta JSON-LD (Organization + WebSite), y mete `<TopBar><Header><main>{children}</main><Footer>`.
+`app/(store)/not-found.tsx` — página 404 personalizada con links al catálogo.
 
 ### Admin protegido — `app/admin/`
 | URL | Página | Notas |
@@ -85,6 +86,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | `/api/upload` | `app/api/upload/route.ts` | POST: recibe imagen, convierte a WebP con sharp, guarda en disco local |
 | `/api/uploads/*` | `app/api/uploads/[...path]/route.ts` | GET: sirve imágenes subidas con cache immutable |
 | `/api/admin/confirm-password` | `app/api/admin/confirm-password/route.ts` | GET: confirma cambio de contraseña vía token email |
+
+### SEO / archivos generados — `app/`
+| Archivo | Función |
+|---------|---------|
+| `app/robots.ts` | Genera `/robots.txt` (allow `/`, disallow `/admin/`, `/api/`, páginas transaccionales) |
+| `app/sitemap.ts` | Genera `/sitemap.xml` dinámico (productos activos + categorías + páginas estáticas) |
+| `app/manifest.ts` | Genera `/manifest.webmanifest` (PWA) |
 
 ### Otros archivos en raíz
 - `proxy.ts` — Next 16 reemplaza `middleware.ts`. Protege `/admin/*` con `auth()`.
@@ -272,6 +280,16 @@ Forms que la editan (parten el schema en dos vistas):
 - Las URLs de imágenes en BD son paths relativos tipo `/api/uploads/1234-abc.webp`.
 - Legacy S3: `lib/s3.ts` y `lib/admin/uploads.ts` siguen existiendo como fallback pero no se usan.
 
+### 🔍 SEO / Datos estructurados
+
+- JSON-LD helpers: `lib/store/jsonld.tsx` — funciones puras (`organizationJsonLd`, `webSiteJsonLd`, `productJsonLd`, `breadcrumbJsonLd`) + componente `JsonLd` para renderizar `<script>`.
+- Organization + WebSite: se inyectan en `app/(store)/layout.tsx` (todas las páginas de tienda).
+- Product + BreadcrumbList: se inyectan en `app/(store)/bolsos/[slug]/page.tsx`.
+- BreadcrumbList catálogo: se inyecta en `app/(store)/bolsos/page.tsx`.
+- Metadata: title template `"%s · Maraya Store"` en `app/layout.tsx`. Cada page solo exporta el título corto.
+- OpenGraph + Twitter cards: configurados en root layout (defaults) y sobreescritos por page donde aplica.
+- Canonical URLs: todas las páginas públicas tienen `alternates.canonical`.
+
 ### 🛠️ Utils generales
 
 - `lib/cn.ts` — concat classnames con falsy filter
@@ -326,7 +344,7 @@ Forms que la editan (parten el schema en dos vistas):
 |-----|----------|
 | `DATABASE_URL` | Postgres (local: con túnel SSH `127.0.0.1:55432`; server: directo) |
 | `AUTH_SECRET` / `NEXTAUTH_SECRET` | NextAuth firma JWT |
-| `AUTH_URL` / `NEXTAUTH_URL` / `NEXT_PUBLIC_URL` | URL pública (en server: `https://maraya.91.107.235.70.nip.io`) |
+| `AUTH_URL` / `NEXTAUTH_URL` / `NEXT_PUBLIC_URL` | URL pública (en server: `https://marayacollection.com`) |
 | `AUTH_TRUST_HOST` | `true` cuando hay reverse proxy delante |
 | `STRIPE_PUBLIC_KEY` / `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Stripe (TEST mientras no en prod) |
 | `RESEND_API_KEY` / `FROM_EMAIL` / `ADMIN_EMAIL` | Emails |
@@ -351,6 +369,8 @@ Producción: `/root/maraya/.env` en el server. Compose lo lee al recrear contain
 | **Cambio de logo** | Reemplazar `public/maraya-logo.png` |
 | **Cambio paleta** | `app/globals.css` `@theme {}` (variables `--color-*`) |
 | **Cambio tipografía** | `app/layout.tsx` (cargar fuente `next/font/google`) + `app/globals.css` (token `--font-*`) |
+| **Nueva página pública (SEO)** | Crear page con `metadata` (título corto, el template añade "· Maraya Store") + `openGraph` + `alternates: { canonical }` → añadir URL a `app/sitemap.ts` |
+| **Nuevo JSON-LD schema** | Añadir función en `lib/store/jsonld.tsx` → inyectar `<JsonLd data={...} />` en la page correspondiente |
 
 ## 7. Convenciones del proyecto
 
@@ -360,6 +380,7 @@ Producción: `/root/maraya/.env` en el server. Compose lo lee al recrear contain
 - **Validación zod en cada action.** Errores van a `Record<string, string>` para que el form los muestre por campo.
 - **Updates parciales en Settings:** todos los campos `.optional()`, action filtra `undefined`. Toggles dependen del hidden `__has_<name>`.
 - **Nuevo admin editor de lista (CRUD inline)** sigue el patrón `<X>Row.tsx` (single form per row con `useActionState`) + `<X>Editor.tsx` (lista + form de creación en `<details>`).
+- **Metadata SEO:** título de cada page usa template `"%s · Maraya Store"` definido en `app/layout.tsx`. Las pages solo exportan el título corto (ej: `title: "Bolsos"`). Páginas admin usan `title: { absolute: "..." }` para saltarse el template. JSON-LD va en `lib/store/jsonld.tsx`.
 - **Tests pendientes** (Vitest + Playwright) — al final del proyecto, no antes. Memory: `feedback_modular_files_and_tests.md`.
 - **Confirmar antes de borrar en server.** Memory `feedback_no_destructive_actions.md`. Otros proyectos del usuario coexisten en el server.
 

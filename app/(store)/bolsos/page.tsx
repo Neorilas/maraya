@@ -1,17 +1,48 @@
 import { Search } from "lucide-react"
+import type { Metadata } from "next"
 import { getCatalog } from "@/lib/store/products"
 import { getActiveHomeCollections } from "@/lib/store/content"
 import { ProductCard } from "@/components/store/ProductCard"
 import { CatalogFilters } from "@/components/store/CatalogFilters"
+import { JsonLd, breadcrumbJsonLd } from "@/lib/store/jsonld"
 
 export const dynamic = "force-dynamic"
 
-export const metadata = {
-  title: "Bolsos · Maraya Store",
-  description: "Catálogo de bolsos artesanales Maraya. Encuentra el tuyo.",
+type SP = { q?: string; cat?: string; filter?: string; sort?: "newest" | "price-asc" | "price-desc" }
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SP>
+}): Promise<Metadata> {
+  const sp = await searchParams
+  const title = metaTitleFor(sp)
+  const description = metaDescFor(sp)
+  const canonical = sp.cat ? `/bolsos?cat=${sp.cat}` : "/bolsos"
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+    alternates: { canonical },
+  }
 }
 
-type SP = { q?: string; cat?: string; filter?: string; sort?: "newest" | "price-asc" | "price-desc" }
+function metaTitleFor(sp: SP): string {
+  if (sp.filter === "new") return "Novedades"
+  if (sp.filter === "top") return "Best sellers"
+  if (sp.filter === "sale") return "Ofertas"
+  if (sp.cat) return `Bolsos ${sp.cat.replace(/-/g, " ")}`
+  if (sp.q) return `Búsqueda: ${sp.q}`
+  return "Bolsos"
+}
+
+function metaDescFor(sp: SP): string {
+  if (sp.filter === "new") return "Las últimas incorporaciones a la colección Maraya. Bolsos artesanales recién llegados."
+  if (sp.filter === "top") return "Los bolsos más vendidos de Maraya. Descubre los favoritos de nuestras clientas."
+  if (sp.filter === "sale") return "Bolsos Maraya en oferta. Aprovecha nuestras promociones en piezas artesanales."
+  if (sp.cat) return `Descubre nuestra colección de bolsos ${sp.cat.replace(/-/g, " ")}. Piezas artesanales únicas de Maraya.`
+  return "Catálogo completo de bolsos artesanales Maraya. Piezas únicas en piel y tejido, hechas con mimo."
+}
 
 export default async function CatalogoPage({
   searchParams,
@@ -31,8 +62,17 @@ export default async function CatalogoPage({
 
   const heading = headingFor(sp)
 
+  const crumbs = [
+    { name: "Inicio", url: "/" },
+    { name: "Bolsos", url: "/bolsos" },
+    ...(sp.cat
+      ? [{ name: sp.cat.replace(/-/g, " "), url: `/bolsos?cat=${sp.cat}` }]
+      : []),
+  ]
+
   return (
     <div className="bg-cream/40">
+      <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-6 sm:py-10 lg:py-14">
         <header className="text-center mb-6 sm:mb-10">
           <span className="font-script text-xl sm:text-2xl text-pink-primary block">

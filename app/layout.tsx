@@ -33,10 +33,21 @@ const marker = Permanent_Marker({
 });
 
 export const metadata: Metadata = {
-  title: "Maraya Store — Bolsos artesanales únicos",
+  title: {
+    template: "%s · Maraya Store",
+    default: "Maraya Store — Bolsos artesanales únicos",
+  },
   description:
     "Bolsos artesanales hechos con mimo. Descubre la colección Maraya: piezas únicas en piel y tejido, diseños que destacan.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_URL ?? "http://localhost:3000"),
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    siteName: "Maraya Store",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

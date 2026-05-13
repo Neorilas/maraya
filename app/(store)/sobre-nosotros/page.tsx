@@ -2,8 +2,13 @@ import { Heart, Gem, Scissors } from "lucide-react"
 import { getSettings } from "@/lib/store/content"
 
 export const metadata = {
-  title: "Sobre Nosotros · Maraya Store",
+  title: "Sobre Nosotros",
   description: "Conoce la historia, valores y proceso detrás de cada bolso Maraya.",
+  openGraph: {
+    title: "Sobre Nosotros",
+    description: "Conoce la historia, valores y proceso detrás de cada bolso Maraya.",
+  },
+  alternates: { canonical: "/sobre-nosotros" },
 }
 
 export default async function SobreNosotrosPage() {

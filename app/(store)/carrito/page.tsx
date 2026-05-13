@@ -1,7 +1,8 @@
 import { CartView } from "@/components/store/CartView"
 
 export const metadata = {
-  title: "Tu carrito · Maraya Store",
+  title: "Tu carrito",
+  robots: { index: false, follow: false },
 }
 
 export default function CarritoPage() {

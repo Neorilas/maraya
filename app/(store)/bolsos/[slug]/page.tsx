@@ -7,6 +7,7 @@ import { ProductGallery } from "@/components/store/ProductGallery"
 import { ShareButtons } from "@/components/store/ShareButtons"
 import { AddToCartButton } from "@/components/store/AddToCartButton"
 import { ProductCard } from "@/components/store/ProductCard"
+import { JsonLd, productJsonLd, breadcrumbJsonLd } from "@/lib/store/jsonld"
 
 const FORMAT_EUR = new Intl.NumberFormat("es-ES", {
   style: "currency",
@@ -20,15 +21,23 @@ export async function generateMetadata({
 }) {
   const { slug } = await params
   const p = await getProductBySlug(slug)
-  if (!p) return { title: "Bolso no encontrado · Maraya" }
+  if (!p) return { title: "Bolso no encontrado" }
+  const desc = p.description.slice(0, 160)
   return {
-    title: `${p.name} · Maraya Store`,
-    description: p.description.slice(0, 160),
+    title: p.name,
+    description: desc,
     openGraph: {
       title: p.name,
-      description: p.description.slice(0, 160),
+      description: desc,
       images: p.images.length > 0 ? [{ url: p.images[0] }] : undefined,
     },
+    twitter: {
+      card: "summary_large_image",
+      title: p.name,
+      description: desc,
+      images: p.images.length > 0 ? [p.images[0]] : undefined,
+    },
+    alternates: { canonical: `/bolsos/${slug}` },
   }
 }
 
@@ -50,8 +59,19 @@ export default async function ProductDetailPage({
   const unitPrice = onSale ? p.salePrice! : p.price
   const productUrl = `${process.env.NEXT_PUBLIC_URL ?? ""}/bolsos/${p.slug}`
 
+  const crumbs = [
+    { name: "Inicio", url: "/" },
+    { name: "Bolsos", url: "/bolsos" },
+    ...(p.category
+      ? [{ name: p.category.replace(/-/g, " "), url: `/bolsos?cat=${p.category}` }]
+      : []),
+    { name: p.name, url: `/bolsos/${p.slug}` },
+  ]
+
   return (
     <div className="bg-cream/40">
+      <JsonLd data={productJsonLd(p)} />
+      <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <div className="mx-auto max-w-7xl px-3 sm:px-4 lg:px-6 py-5 sm:py-8 lg:py-12">
         <Breadcrumbs name={p.name} category={p.category} />
 

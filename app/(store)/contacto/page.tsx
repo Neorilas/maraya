@@ -9,8 +9,13 @@ import {
 } from "@/components/store/SocialIcons"
 
 export const metadata = {
-  title: "Contacto · Maraya Store",
+  title: "Contacto",
   description: "¿Tienes alguna pregunta? Escríbenos y te responderemos lo antes posible.",
+  openGraph: {
+    title: "Contacto",
+    description: "¿Tienes alguna pregunta? Escríbenos y te responderemos lo antes posible.",
+  },
+  alternates: { canonical: "/contacto" },
 }
 
 export default async function ContactoPage() {

@@ -3,7 +3,7 @@ import { Heart } from "lucide-react"
 import { LoginForm } from "@/components/admin/LoginForm"
 
 export const metadata = {
-  title: "Acceso admin · Maraya Store",
+  title: { absolute: "Acceso admin · Maraya" },
   robots: { index: false, follow: false },
 }
 

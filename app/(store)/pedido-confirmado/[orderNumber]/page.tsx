@@ -8,7 +8,7 @@ import { OrderStatusPoller } from "@/components/store/OrderStatusPoller"
 export const dynamic = "force-dynamic"
 
 export const metadata = {
-  title: "Pedido confirmado · Maraya Collection",
+  title: "Pedido confirmado",
   robots: { index: false, follow: false },
 }
 

@@ -4,7 +4,7 @@ import { getSettings } from "@/lib/store/content"
 export const dynamic = "force-dynamic"
 
 export const metadata = {
-  title: "Checkout · Maraya Store",
+  title: "Checkout",
   robots: { index: false, follow: false },
 }
 

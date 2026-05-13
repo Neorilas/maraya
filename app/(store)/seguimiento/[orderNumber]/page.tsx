@@ -17,7 +17,7 @@ import { OrderStatusBadge, type OrderStatus } from "@/components/admin/OrderStat
 export const dynamic = "force-dynamic"
 
 export const metadata = {
-  title: "Seguimiento del pedido · Maraya Collection",
+  title: "Seguimiento del pedido",
   robots: { index: false, follow: false },
 }
 

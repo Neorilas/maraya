@@ -4,7 +4,7 @@ import { AdminShell } from "@/components/admin/AdminShell"
 import { AdminTopBar } from "@/components/admin/AdminTopBar"
 
 export const metadata = {
-  title: "Panel Maraya · Admin",
+  title: { absolute: "Panel Maraya · Admin" },
   robots: { index: false, follow: false },
 }
 
