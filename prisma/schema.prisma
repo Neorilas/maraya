@@ -227,6 +227,22 @@ model Admin {
   password  String
   name      String
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  passwordResetTokens PasswordResetToken[]
+}
+
+/// Token temporal para confirmar cambio de contraseña vía email.
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId   String
+  token     String   @unique
+  /// Hash bcrypt de la nueva contraseña (se aplica al confirmar).
+  newHash   String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
 }
 
 enum OrderStatus {

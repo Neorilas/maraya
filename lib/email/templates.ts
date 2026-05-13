@@ -183,6 +183,34 @@ export function customerStatusUpdate({
   return { subject: c.subject, html: SHELL(inner) }
 }
 
+/** Email de confirmación para cambio de contraseña de admin. */
+export function passwordChangeConfirmationEmail({
+  adminName,
+  adminEmail,
+  confirmUrl,
+  expiresInMinutes,
+}: {
+  adminName: string
+  adminEmail: string
+  confirmUrl: string
+  expiresInMinutes: number
+}): { subject: string; html: string } {
+  const inner = `
+<tr><td style="padding:32px;">
+  <h1 style="font-family:Georgia,serif;font-style:italic;color:#1F1F1F;margin:0 0 16px 0;font-size:24px;">Confirmación de cambio de contraseña</h1>
+  <p style="line-height:1.6;color:#1F1F1F;">Se ha solicitado cambiar la contraseña del administrador <strong>${escapeHtml(adminName)}</strong> (${escapeHtml(adminEmail)}).</p>
+  <p style="line-height:1.6;color:#1F1F1F;">Si autorizas este cambio, pulsa el botón de abajo. Si no lo solicitaste, ignora este email.</p>
+  <p style="text-align:center;margin:28px 0;">
+    <a href="${confirmUrl}" style="display:inline-block;padding:14px 32px;background:#F472B6;color:#fff;text-decoration:none;border-radius:9999px;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;font-size:14px;">Confirmar cambio</a>
+  </p>
+  <p style="color:#6B7280;font-size:13px;text-align:center;">Este enlace expira en ${expiresInMinutes} minutos.</p>
+</td></tr>`
+  return {
+    subject: `Confirma el cambio de contraseña — ${adminEmail}`,
+    html: SHELL(inner, `Confirma el cambio de contraseña de ${adminEmail}.`),
+  }
+}
+
 function escapeHtml(s: string): string {
   return s
     .replaceAll("&", "&amp;")

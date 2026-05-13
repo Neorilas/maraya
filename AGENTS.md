@@ -70,6 +70,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | `/admin/productos/[id]` | `app/admin/(panel)/productos/[id]/page.tsx` | |
 | `/admin/contenido` | `app/admin/(panel)/contenido/page.tsx` | TopBar/Hero/Brand + Menu + Trust + Collections |
 | `/admin/configuracion` | `app/admin/(panel)/configuracion/page.tsx` | Tienda + Stripe + Social + Footer |
+| `/admin/usuarios` | `app/admin/(panel)/usuarios/page.tsx` | CRUD admins + cambio password con confirmación email |
 | `/admin/envios` | `app/admin/(panel)/envios/page.tsx` | Zonas envío |
 
 `app/admin/(panel)/layout.tsx` hace `await auth()` (redirect si no sesión) y monta `<AdminShell>` (sidebar + topbar). Login está FUERA del grupo `(panel)` para no heredar sidebar.
@@ -83,6 +84,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | `/api/stripe/webhook` | `app/api/stripe/webhook/route.ts` | Procesa `payment_intent.succeeded`, `payment_failed`, `charge.refunded` |
 | `/api/upload` | `app/api/upload/route.ts` | POST: recibe imagen, convierte a WebP con sharp, guarda en disco local |
 | `/api/uploads/*` | `app/api/uploads/[...path]/route.ts` | GET: sirve imágenes subidas con cache immutable |
+| `/api/admin/confirm-password` | `app/api/admin/confirm-password/route.ts` | GET: confirma cambio de contraseña vía token email |
 
 ### Otros archivos en raíz
 - `proxy.ts` — Next 16 reemplaza `middleware.ts`. Protege `/admin/*` con `auth()`.
@@ -208,6 +210,18 @@ Forms que la editan (parten el schema en dos vistas):
 - Protección rutas: `proxy.ts` (matcher `/admin/:path*`, redirect a `/admin/login` si no auth).
 - Defense-in-depth en pages admin: `await auth()` en `app/admin/(panel)/layout.tsx`.
 
+### 👤 Gestión de usuarios admin
+
+- Página: `app/admin/(panel)/usuarios/page.tsx`.
+- Editor lista: `components/admin/users/AdminsEditor.tsx` (server, orquesta rows + form crear).
+- Fila editable: `components/admin/users/AdminRow.tsx` (client, editar nombre/email, cambiar contraseña, eliminar).
+- Form crear: `components/admin/users/CreateAdminForm.tsx` (client, `<details>` colapsable).
+- Server actions: `lib/admin/admins.ts` (`createAdminAction`, `updateAdminAction`, `requestPasswordChangeAction`, `confirmPasswordChange`, `deleteAdminAction`).
+- API confirmación password: `app/api/admin/confirm-password/route.ts` (GET con token, aplica el hash).
+- Email template: `lib/email/templates.ts` → `passwordChangeConfirmationEmail`.
+- Modelo token: `PasswordResetToken` (Prisma, relación con Admin, expira en 30 min).
+- **Flujo cambio contraseña:** admin introduce nueva password → se hashea y guarda en `PasswordResetToken` → email a `faltodeimaginacion@gmail.com` → clic confirma → se aplica el hash → token marcado como usado.
+
 ### 🧰 Admin shell
 
 - Layout panel: `app/admin/(panel)/layout.tsx`.
@@ -280,7 +294,8 @@ Forms que la editan (parten el schema en dos vistas):
 | `TrustBadge` | Cápsulas con icono | — | `icon: String` matchea `STORE_ICON_MAP` en `lib/store/icons.ts` |
 | `MenuItem` | Items del header | — | `sortOrder`, `isActive`, `hasDropdown` |
 | `ProductCategory` | Categorías catálogo | `slug` | Borrado lógico (desactiva) si está en uso por algún Product |
-| `Admin` | Cuentas admin | `email` | `password: bcrypt hash` |
+| `Admin` | Cuentas admin | `email` | `password: bcrypt hash`, `updatedAt` |
+| `PasswordResetToken` | Token confirmación cambio password | `token` | `newHash` (bcrypt), `expiresAt`, `usedAt?`, relación con `Admin` (cascade delete) |
 | enum `OrderStatus` | — | — | PENDIENTE / PAGADO / EN_PREPARACION / ENVIADO / ENTREGADO / CANCELADO / REEMBOLSADO |
 
 **Migraciones aplicadas (`prisma/migrations/`):**
@@ -292,6 +307,7 @@ Forms que la editan (parten el schema en dos vistas):
 6. `20260505191740_images_alt` — auto-generada por Prisma (drift fix de la anterior).
 7. `20260512_tracking_token` — `trackingToken` UUID en `Order` + backfill + unique index.
 8. `20260512_shipping_company` — `shippingCompany` nullable en `Order`.
+9. `20260513_admin_password_tokens` — `Admin.updatedAt` + modelo `PasswordResetToken`.
 
 **Seeds (`prisma/seeds/*.ts`):**
 - `shipping-zones.ts` — 6 zonas (upsert por `code`).
@@ -331,6 +347,7 @@ Producción: `/root/maraya/.env` en el server. Compose lo lee al recrear contain
 | **Nuevo estado de pedido / lógica al cambiar estado** | `prisma/schema.prisma` enum `OrderStatus` → migrate → `lib/admin/orders.ts` (añadir lógica + email si aplica) → `lib/email/templates.ts` (nuevo template) → `components/admin/OrderStatusBadge.tsx` (estilo del badge) → `app/(store)/seguimiento/[orderNumber]/page.tsx` (icono + label en `STATUS_META`) |
 | **Nuevo método de pago** | `lib/stripe.ts` (configuración) + checkout API (PI options) — Stripe automatic_payment_methods ya cubre la mayoría |
 | **Nuevo país de envío** | `lib/shipping.ts` `COUNTRY_TO_ZONE` (mapping) + `lib/checkout.ts` `CHECKOUT_COUNTRIES` (label en select) + `prisma.shippingZone.create` desde admin si zona nueva |
+| **Nuevo admin / cambiar password** | `lib/admin/admins.ts` (actions) → `components/admin/users/AdminRow.tsx` o `CreateAdminForm.tsx` (UI) → cambio password envía email vía `lib/email/templates.ts` → confirma en `app/api/admin/confirm-password/route.ts` |
 | **Cambio de logo** | Reemplazar `public/maraya-logo.png` |
 | **Cambio paleta** | `app/globals.css` `@theme {}` (variables `--color-*`) |
 | **Cambio tipografía** | `app/layout.tsx` (cargar fuente `next/font/google`) + `app/globals.css` (token `--font-*`) |

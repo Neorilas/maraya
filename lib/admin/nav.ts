@@ -5,6 +5,7 @@ import {
   ImageIcon,
   Truck,
   Settings,
+  Users,
 } from "lucide-react"
 import type { ComponentType } from "react"
 
@@ -45,6 +46,12 @@ export const ADMIN_NAV: NavItem[] = [
     href: "/admin/envios",
     icon: Truck,
     matchPrefix: ["/admin/envios"],
+  },
+  {
+    label: "Usuarios",
+    href: "/admin/usuarios",
+    icon: Users,
+    matchPrefix: ["/admin/usuarios"],
   },
   {
     label: "Configuración",
