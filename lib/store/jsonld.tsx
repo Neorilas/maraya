@@ -95,6 +95,42 @@ export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
   }
 }
 
+interface TestimonialData {
+  author: string
+  text: string
+  rating: number
+}
+
+export function reviewJsonLd(testimonials: TestimonialData[]) {
+  if (testimonials.length === 0) return null
+
+  const avg = testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Maraya Store",
+    url: base(),
+    image: `${base()}/maraya-logo.png`,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: avg.toFixed(1),
+      bestRating: "5",
+      ratingCount: testimonials.length.toString(),
+    },
+    review: testimonials.map((t) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: t.author },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: t.rating.toString(),
+        bestRating: "5",
+      },
+      reviewBody: t.text,
+    })),
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Render helper (React server component)                            */
 /* ------------------------------------------------------------------ */

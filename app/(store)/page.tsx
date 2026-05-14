@@ -3,6 +3,7 @@ import { ImageHero } from "@/components/store/ImageHero"
 import { TrustBadges } from "@/components/store/TrustBadges"
 import { CollectionsGrid } from "@/components/store/CollectionsGrid"
 import { BrandBanner } from "@/components/store/BrandBanner"
+import { TestimonialsSection } from "@/components/store/TestimonialsSection"
 import { getSettings } from "@/lib/store/content"
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -46,6 +47,7 @@ export default function HomePage() {
         mobileHeight={916}
         href="/bolsos"
       />
+      <TestimonialsSection />
       <BrandBanner />
     </>
   )

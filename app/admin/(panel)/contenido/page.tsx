@@ -4,6 +4,7 @@ import { TrustBadgesEditor } from "@/components/admin/content/TrustBadgesEditor"
 import { CollectionsEditor } from "@/components/admin/content/CollectionsEditor"
 import { MenuItemsEditor } from "@/components/admin/content/MenuItemsEditor"
 import { ContentSettingsForm } from "@/components/admin/settings/ContentSettingsForm"
+import { TestimonialsEditor } from "@/components/admin/content/TestimonialsEditor"
 
 export const dynamic = "force-dynamic"
 
@@ -13,7 +14,7 @@ export const metadata = {
 }
 
 export default async function ContenidoPage() {
-  const [settings, badges, collections, menuItems, categories] = await Promise.all([
+  const [settings, badges, collections, menuItems, categories, testimonials] = await Promise.all([
     getSettings(),
     prisma.trustBadge.findMany({ orderBy: { sortOrder: "asc" } }),
     prisma.homeCollection.findMany({ orderBy: { sortOrder: "asc" } }),
@@ -23,6 +24,7 @@ export default async function ContenidoPage() {
       orderBy: { sortOrder: "asc" },
       select: { slug: true, label: true },
     }),
+    prisma.testimonial.findMany({ orderBy: { sortOrder: "asc" } }),
   ])
 
   return (
@@ -45,6 +47,7 @@ export default async function ContenidoPage() {
       <MenuItemsEditor items={menuItems} />
       <TrustBadgesEditor badges={badges} />
       <CollectionsEditor collections={collections} categories={categories} />
+      <TestimonialsEditor testimonials={testimonials} />
     </div>
   )
 }

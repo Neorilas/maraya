@@ -169,6 +169,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | Hero | `components/store/HeroBanner.tsx` | Settings.hero* | `SectionHero` en /contenido |
 | Trust badges | `components/store/TrustBadges.tsx` | `TrustBadge` model | `TrustBadgesEditor` en /contenido |
 | Colecciones del home | `components/store/CollectionsGrid.tsx` | `HomeCollection` model | `CollectionsEditor` + `CollectionDestinationField` en /contenido |
+| Testimonios / Reseñas | `components/store/TestimonialsSection.tsx` | `Testimonial` model | `TestimonialsEditor` en /contenido |
 | Brand banner ("Brilla. Destaca.") | `components/store/BrandBanner.tsx` | Settings.brandBanner* | `SectionBrandBanner` en /contenido |
 | Footer | `components/store/Footer.tsx` | Settings.newsletterIntro / clubIntro / social URLs | `SectionFooter` + `SectionSocial` en /admin/configuracion |
 | Logo | `public/maraya-logo.png` | (no editable desde admin, cambiar archivo) | swap directo |
@@ -195,6 +196,16 @@ Forms que la editan (parten el schema en dos vistas):
 - Render header: `components/store/Header.tsx` (mapea menuItems).
 - CRUD admin: `components/admin/content/MenuItemsEditor.tsx` + `MenuItemRow.tsx`.
 - Server actions: `lib/admin/menu-items.ts` (`saveMenuItem`, `createMenuItem`, `deleteMenuItem`).
+
+### ⭐ Reseñas / Testimonios
+
+- Modelo: `Testimonial` (ver §4).
+- Lectura pública: `lib/store/content.ts` → `getActiveTestimonials()`.
+- Render home: `components/store/TestimonialsSection.tsx` (server async, con JSON-LD `Review`).
+- CRUD admin: `components/admin/content/TestimonialsEditor.tsx` + `TestimonialRow.tsx`.
+- Server actions: `lib/admin/testimonials.ts` (`saveTestimonial`, `createTestimonial`, `deleteTestimonial`).
+- JSON-LD: `lib/store/jsonld.tsx` → `reviewJsonLd()` (AggregateRating + Reviews individuales).
+- Seed: `prisma/seeds/testimonials.ts` (3 reseñas de ejemplo vinculadas a Etsy).
 
 ### 🎀 Decoraciones / patrones / iconos
 
@@ -282,7 +293,7 @@ Forms que la editan (parten el schema en dos vistas):
 
 ### 🔍 SEO / Datos estructurados
 
-- JSON-LD helpers: `lib/store/jsonld.tsx` — funciones puras (`organizationJsonLd`, `webSiteJsonLd`, `productJsonLd`, `breadcrumbJsonLd`) + componente `JsonLd` para renderizar `<script>`.
+- JSON-LD helpers: `lib/store/jsonld.tsx` — funciones puras (`organizationJsonLd`, `webSiteJsonLd`, `productJsonLd`, `breadcrumbJsonLd`, `reviewJsonLd`) + componente `JsonLd` para renderizar `<script>`.
 - Organization + WebSite: se inyectan en `app/(store)/layout.tsx` (todas las páginas de tienda).
 - Product + BreadcrumbList: se inyectan en `app/(store)/bolsos/[slug]/page.tsx`.
 - BreadcrumbList catálogo: se inyecta en `app/(store)/bolsos/page.tsx`.
@@ -312,6 +323,7 @@ Forms que la editan (parten el schema en dos vistas):
 | `TrustBadge` | Cápsulas con icono | — | `icon: String` matchea `STORE_ICON_MAP` en `lib/store/icons.ts` |
 | `MenuItem` | Items del header | — | `sortOrder`, `isActive`, `hasDropdown` |
 | `ProductCategory` | Categorías catálogo | `slug` | Borrado lógico (desactiva) si está en uso por algún Product |
+| `Testimonial` | Reseñas clientes (home) | — | `author`, `text`, `rating` (1-5), `source?`, `sourceUrl?`, `sortOrder`, `isActive` |
 | `Admin` | Cuentas admin | `email` | `password: bcrypt hash`, `updatedAt` |
 | `PasswordResetToken` | Token confirmación cambio password | `token` | `newHash` (bcrypt), `expiresAt`, `usedAt?`, relación con `Admin` (cascade delete) |
 | enum `OrderStatus` | — | — | PENDIENTE / PAGADO / EN_PREPARACION / ENVIADO / ENTREGADO / CANCELADO / REEMBOLSADO |
@@ -333,6 +345,7 @@ Forms que la editan (parten el schema en dos vistas):
 - `trust-badges.ts` — 4 badges (solo si tabla vacía).
 - `menu-items.ts` — 7 items menú (solo si tabla vacía).
 - `product-categories.ts` — 6 categorías (upsert por `slug`).
+- `testimonials.ts` — 3 reseñas ejemplo (solo si tabla vacía).
 
 `prisma/seed.ts` orquesta todo + crea Admin inicial con `ADMIN_INITIAL_PASSWORD` o random base64.
 

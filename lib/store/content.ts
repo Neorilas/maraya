@@ -43,8 +43,16 @@ export const getActiveProductCategories = cache(async () => {
   })
 })
 
+export const getActiveTestimonials = cache(async () => {
+  return prisma.testimonial.findMany({
+    where: { isActive: true },
+    orderBy: { sortOrder: "asc" },
+  })
+})
+
 export type StoreSettings = Awaited<ReturnType<typeof getSettings>>
 export type TrustBadgeRow = Awaited<ReturnType<typeof getActiveTrustBadges>>[number]
 export type HomeCollectionRow = Awaited<ReturnType<typeof getActiveHomeCollections>>[number]
 export type MenuItemRow = Awaited<ReturnType<typeof getActiveMenuItems>>[number]
 export type ProductCategoryRow = Awaited<ReturnType<typeof getActiveProductCategories>>[number]
+export type TestimonialRow = Awaited<ReturnType<typeof getActiveTestimonials>>[number]

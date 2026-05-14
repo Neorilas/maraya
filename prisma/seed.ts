@@ -7,6 +7,7 @@ import { HOME_COLLECTIONS } from "./seeds/home-collections"
 import { TRUST_BADGES } from "./seeds/trust-badges"
 import { MENU_ITEMS } from "./seeds/menu-items"
 import { PRODUCT_CATEGORIES } from "./seeds/product-categories"
+import { TESTIMONIALS } from "./seeds/testimonials"
 
 const prisma = new PrismaClient()
 
@@ -103,6 +104,18 @@ async function seedProductCategories() {
   console.log(`✓ Product categories: ${PRODUCT_CATEGORIES.length} upserted`)
 }
 
+async function seedTestimonials() {
+  const count = await prisma.testimonial.count()
+  if (count > 0) {
+    console.log(`✓ Testimonials: ya hay ${count}, no se tocan`)
+    return
+  }
+  for (const t of TESTIMONIALS) {
+    await prisma.testimonial.create({ data: t })
+  }
+  console.log(`✓ Testimonials: ${TESTIMONIALS.length} creados`)
+}
+
 async function main() {
   await seedShippingZones()
   await seedSettings()
@@ -110,6 +123,7 @@ async function main() {
   await seedTrustBadges()
   await seedMenuItems()
   await seedProductCategories()
+  await seedTestimonials()
   await seedAdmin()
 }
 
