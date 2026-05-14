@@ -25,18 +25,26 @@ export default function HomePage() {
     <>
       <ImageHero
         src="/hero-salvaje.jpg"
+        mobileSrc="/hero-salvaje-mobile.jpg"
         alt="Salvaje — Artesanía con actitud. Bolsos hechos a mano por Maraya"
+        width={1536}
+        height={1024}
+        mobileWidth={850}
+        mobileHeight={1024}
         href="/bolsos"
         priority
-        objectPosition="20% center"
       />
       <TrustBadges />
       <CollectionsGrid />
       <ImageHero
         src="/hero-quehablen.jpg"
+        mobileSrc="/hero-quehablen-mobile.jpg"
         alt="Que hablen, que hablen — Bolsos artesanales Maraya con animal print y detalles únicos"
+        width={1288}
+        height={916}
+        mobileWidth={960}
+        mobileHeight={916}
         href="/bolsos"
-        objectPosition="25% center"
       />
       <BrandBanner />
     </>

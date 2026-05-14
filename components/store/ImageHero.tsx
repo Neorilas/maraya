@@ -3,33 +3,48 @@ import Link from "next/link"
 
 interface ImageHeroProps {
   src: string
+  mobileSrc: string
   alt: string
+  width: number
+  height: number
+  mobileWidth: number
+  mobileHeight: number
   href?: string
   priority?: boolean
-  /** CSS object-position — controls which part of the image is visible on mobile crop */
-  objectPosition?: string
 }
 
 export function ImageHero({
   src,
+  mobileSrc,
   alt,
+  width,
+  height,
+  mobileWidth,
+  mobileHeight,
   href,
   priority = false,
-  objectPosition = "center",
 }: ImageHeroProps) {
   const inner = (
-    <div className="relative w-full aspect-[4/5] sm:aspect-[16/9] lg:aspect-[21/9]">
+    <>
+      <Image
+        src={mobileSrc}
+        alt={alt}
+        width={mobileWidth}
+        height={mobileHeight}
+        priority={priority}
+        className="sm:hidden w-full h-auto"
+        sizes="100vw"
+      />
       <Image
         src={src}
         alt={alt}
-        fill
+        width={width}
+        height={height}
         priority={priority}
-        className="object-cover"
-        style={{ objectPosition }}
+        className="hidden sm:block w-full h-auto"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
-    </div>
+    </>
   )
 
   return (
