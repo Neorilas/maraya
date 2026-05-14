@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { HeroBanner } from "@/components/store/HeroBanner"
+import { ImageHero } from "@/components/store/ImageHero"
 import { TrustBadges } from "@/components/store/TrustBadges"
 import { CollectionsGrid } from "@/components/store/CollectionsGrid"
 import { BrandBanner } from "@/components/store/BrandBanner"
@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: s.storeName,
       description: desc,
-      images: s.heroImageUrl ? [{ url: s.heroImageUrl }] : [{ url: "/maraya-logo.png" }],
+      images: [{ url: "/hero-salvaje.jpg" }],
     },
     alternates: { canonical: "/" },
   }
@@ -23,9 +23,21 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function HomePage() {
   return (
     <>
-      <HeroBanner />
+      <ImageHero
+        src="/hero-salvaje.jpg"
+        alt="Salvaje — Artesanía con actitud. Bolsos hechos a mano por Maraya"
+        href="/bolsos"
+        priority
+        objectPosition="20% center"
+      />
       <TrustBadges />
       <CollectionsGrid />
+      <ImageHero
+        src="/hero-quehablen.jpg"
+        alt="Que hablen, que hablen — Bolsos artesanales Maraya con animal print y detalles únicos"
+        href="/bolsos"
+        objectPosition="25% center"
+      />
       <BrandBanner />
     </>
   )
