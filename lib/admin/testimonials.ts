@@ -44,10 +44,12 @@ async function requireSession() {
   if (!s?.user) throw new Error("No autorizado")
 }
 
-function clean(data: Record<string, unknown>) {
-  if (data.sourceUrl === "") data.sourceUrl = null
-  if (!data.source) data.source = null
-  return data
+function cleanData(data: z.infer<typeof createSchema>) {
+  return {
+    ...data,
+    source: data.source || null,
+    sourceUrl: data.sourceUrl === "" ? null : data.sourceUrl || null,
+  }
 }
 
 export async function saveTestimonial(
@@ -59,8 +61,8 @@ export async function saveTestimonial(
   if (!parsed.success) {
     return { ok: false, message: "Revisa los campos", errors: zodErrors(parsed.error.issues) }
   }
-  const { id, ...data } = parsed.data
-  await prisma.testimonial.update({ where: { id }, data: clean(data) })
+  const { id, ...rest } = parsed.data
+  await prisma.testimonial.update({ where: { id }, data: cleanData(rest) })
   revalidatePath("/", "layout")
   revalidatePath("/admin/contenido")
   return { ok: true, message: "Guardado" }
@@ -75,7 +77,7 @@ export async function createTestimonial(
   if (!parsed.success) {
     return { ok: false, message: "Revisa los campos", errors: zodErrors(parsed.error.issues) }
   }
-  await prisma.testimonial.create({ data: clean(parsed.data) })
+  await prisma.testimonial.create({ data: cleanData(parsed.data) })
   revalidatePath("/", "layout")
   revalidatePath("/admin/contenido")
   return { ok: true, message: "Reseña creada" }
