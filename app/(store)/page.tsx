@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: s.storeName,
       description: desc,
-      images: [{ url: "/hero-salvaje.jpg" }],
+      images: [{ url: "/hero-actitud.jpg" }],
     },
     alternates: { canonical: "/" },
   }
@@ -24,10 +24,10 @@ export default function HomePage() {
   return (
     <>
       <ImageHero
-        src="/hero-salvaje.jpg"
-        mobileSrc="/hero-salvaje-mobile.jpg"
-        alt="Salvaje — Artesanía con actitud. Bolsos hechos a mano por Maraya"
-        width={1536}
+        src="/hero-actitud.jpg"
+        mobileSrc="/hero-actitud-mobile.jpg"
+        alt="Que hablen, Que hablen — Artesanía con actitud. Bolsos hechos a mano por Maraya"
+        width={1535}
         height={1024}
         mobileWidth={850}
         mobileHeight={1024}
