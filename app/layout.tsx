@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Playfair_Display, Dancing_Script, Nunito, Permanent_Marker } from "next/font/google";
 import "./globals.css";
-
-const GA_ID = "G-VYM9D2NE9G";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -63,16 +60,15 @@ export default function RootLayout({
       lang="es"
       className={`${playfair.variable} ${dancing.variable} ${nunito.variable} ${marker.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col">
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="beforeInteractive"
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-VYM9D2NE9G" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-VYM9D2NE9G');`,
+          }}
         />
-        <Script id="google-analytics" strategy="beforeInteractive">
-          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`}
-        </Script>
-        {children}
-      </body>
+      </head>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
