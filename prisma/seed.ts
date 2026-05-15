@@ -29,7 +29,7 @@ async function seedSettings() {
     create: {
       id: "singleton",
       storeName: "Maraya Store",
-      storeEmail: process.env.STORE_EMAIL ?? "pedidos@marayastore.com",
+      storeEmail: process.env.STORE_EMAIL ?? "info@marayacollection.com",
       adminEmail: process.env.ADMIN_EMAIL ?? "admin@marayastore.com",
     },
   })
