@@ -1,6 +1,7 @@
 import { TopBar } from "@/components/store/TopBar"
 import { Header } from "@/components/store/Header"
 import { Footer } from "@/components/store/Footer"
+import { DevDisclaimer } from "@/components/store/DevDisclaimer"
 import { getSettings } from "@/lib/store/content"
 import { JsonLd, organizationJsonLd, webSiteJsonLd } from "@/lib/store/jsonld"
 
@@ -21,6 +22,7 @@ export default async function StoreLayout({
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />
+      <DevDisclaimer />
     </>
   )
 }
