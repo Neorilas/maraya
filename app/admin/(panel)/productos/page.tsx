@@ -17,8 +17,8 @@ export default async function ProductosListPage({
   searchParams: Promise<{ q?: string; cat?: string }>
 }) {
   const sp = await searchParams
-  const q = (sp.q ?? "").trim()
-  const cat = (sp.cat ?? "").trim()
+  const q = (sp.q ?? "").trim().slice(0, 100)
+  const cat = (sp.cat ?? "").trim().slice(0, 60)
 
   const [products, categories] = await Promise.all([
     prisma.product.findMany({

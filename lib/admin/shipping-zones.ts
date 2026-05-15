@@ -9,11 +9,11 @@ const emptyToNull = (v: unknown) =>
   typeof v === "string" && v.trim() === "" ? null : v
 
 const baseSchema = {
-  name:     z.string().min(1, "Obligatorio"),
-  code:     z.string().min(1).regex(/^[A-Z_]+$/, "Mayúsculas y guion bajo"),
+  name:     z.string().min(1, "Obligatorio").max(100),
+  code:     z.string().min(1).max(30).regex(/^[A-Z_]+$/, "Mayúsculas y guion bajo"),
   price:    z.coerce.number().min(0).max(10000),
   freeFrom: z.preprocess(emptyToNull, z.coerce.number().min(0).max(100000).nullable()),
-  days:     z.string().min(1, "Obligatorio"),
+  days:     z.string().min(1, "Obligatorio").max(40),
   isActive: z.preprocess((v) => v === "on" || v === true, z.boolean()),
 }
 

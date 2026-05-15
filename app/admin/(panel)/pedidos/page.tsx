@@ -31,8 +31,8 @@ export default async function PedidosListPage({
   searchParams: Promise<{ q?: string; status?: string }>
 }) {
   const sp = await searchParams
-  const q = (sp.q ?? "").trim()
-  const status = (sp.status ?? "").trim() as OrderStatus | ""
+  const q = (sp.q ?? "").trim().slice(0, 100)
+  const status = (sp.status ?? "").trim().slice(0, 20) as OrderStatus | ""
 
   const orders = await prisma.order.findMany({
     where: {

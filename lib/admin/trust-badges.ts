@@ -10,8 +10,8 @@ const iconValues = Object.keys(STORE_ICON_MAP) as [string, ...string[]]
 
 const baseSchema = {
   icon: z.enum(iconValues),
-  title: z.string().min(1, "Obligatorio"),
-  text: z.string().min(1, "Obligatorio"),
+  title: z.string().min(1, "Obligatorio").max(100),
+  text: z.string().min(1, "Obligatorio").max(300),
   sortOrder: z.coerce.number().int().min(0).max(99),
   isActive: z.preprocess((v) => v === "on" || v === true, z.boolean()),
 }

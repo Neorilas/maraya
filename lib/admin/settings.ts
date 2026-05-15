@@ -7,10 +7,10 @@ import { prisma } from "@/lib/prisma"
 
 /** Convierte string vacío en null (para campos opcionales). */
 const emptyToNull = (v: unknown) => (typeof v === "string" && v.trim() === "" ? null : v)
-const optString = z.preprocess(emptyToNull, z.string().nullable())
+const optString = z.preprocess(emptyToNull, z.string().max(500).nullable())
 const optUrl = z.preprocess(
   emptyToNull,
-  z.string().url("URL inválida").nullable(),
+  z.string().url("URL inválida").max(500).nullable(),
 )
 
 /**
@@ -25,9 +25,9 @@ const settingsSchema = z.object({
   adminEmail: z.string().email("Email inválido").optional(),
 
   // Stripe
-  stripePublicKey:     optString.optional(),
-  stripeSecretKey:     optString.optional(),
-  stripeWebhookSecret: optString.optional(),
+  stripePublicKey:     z.preprocess(emptyToNull, z.string().max(200).nullable()).optional(),
+  stripeSecretKey:     z.preprocess(emptyToNull, z.string().max(200).nullable()).optional(),
+  stripeWebhookSecret: z.preprocess(emptyToNull, z.string().max(200).nullable()).optional(),
 
   // Redes
   instagramUrl:   optUrl.optional(),
@@ -60,13 +60,13 @@ const settingsSchema = z.object({
   brandBannerBadge:   optString.optional(),
 
   // Sobre Nosotros
-  aboutIntro:        optString.optional(),
+  aboutIntro:        z.preprocess(emptyToNull, z.string().max(2000).nullable()).optional(),
   aboutHistoryTitle: optString.optional(),
-  aboutHistoryText:  optString.optional(),
+  aboutHistoryText:  z.preprocess(emptyToNull, z.string().max(2000).nullable()).optional(),
   aboutValuesTitle:  optString.optional(),
-  aboutValuesText:   optString.optional(),
+  aboutValuesText:   z.preprocess(emptyToNull, z.string().max(2000).nullable()).optional(),
   aboutProcessTitle: optString.optional(),
-  aboutProcessText:  optString.optional(),
+  aboutProcessText:  z.preprocess(emptyToNull, z.string().max(2000).nullable()).optional(),
 
   // Contacto
   contactIntro:    optString.optional(),

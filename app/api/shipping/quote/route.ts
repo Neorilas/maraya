@@ -3,8 +3,8 @@ import { z } from "zod"
 import { getShippingQuote, NoShippingAvailableError } from "@/lib/shipping"
 
 const querySchema = z.object({
-  country: z.string().min(2),
-  subtotal: z.coerce.number().min(0),
+  country: z.string().min(2).max(10),
+  subtotal: z.coerce.number().min(0).max(1_000_000),
 })
 
 /** Endpoint público para que el checkout en cliente recalcule envío al cambiar país/subtotal. */

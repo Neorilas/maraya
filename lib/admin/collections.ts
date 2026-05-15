@@ -9,16 +9,15 @@ const slugRegex = /^[a-z0-9-]+$/
 
 const emptyToNull = (v: unknown) =>
   typeof v === "string" && v.trim() === "" ? null : v
-const optString = z.preprocess(emptyToNull, z.string().nullable())
 
 const baseSchema = {
-  slug: z.string().min(1).regex(slugRegex, "Solo minúsculas, números y guiones"),
-  name: z.string().min(1, "Obligatorio"),
-  tag: optString,
-  gradient: z.string().min(1, "Obligatorio"),
-  imageUrl: optString,
-  imageAlt: optString,
-  href: optString,
+  slug: z.string().min(1).max(60).regex(slugRegex, "Solo minúsculas, números y guiones"),
+  name: z.string().min(1, "Obligatorio").max(100),
+  tag: z.preprocess(emptyToNull, z.string().max(60).nullable()),
+  gradient: z.string().min(1, "Obligatorio").max(200),
+  imageUrl: z.preprocess(emptyToNull, z.string().max(500).nullable()),
+  imageAlt: z.preprocess(emptyToNull, z.string().max(200).nullable()),
+  href: z.preprocess(emptyToNull, z.string().max(200).nullable()),
   sortOrder: z.coerce.number().int().min(0).max(99),
   isActive: z.preprocess((v) => v === "on" || v === true, z.boolean()),
 }

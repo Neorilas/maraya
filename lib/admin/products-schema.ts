@@ -41,7 +41,7 @@ const baseSchema = {
     .string()
     .min(1, "Obligatorio")
     .regex(/^[a-z0-9-]+$/, "Solo minúsculas, números y guiones"),
-  description: z.string().min(1, "Obligatorio"),
+  description: z.string().min(1, "Obligatorio").max(5000),
   price: z.coerce.number().min(0.01, "Debe ser > 0").max(100000),
   salePrice: z.preprocess(
     (v) => {
@@ -52,9 +52,9 @@ const baseSchema = {
     z.coerce.number().min(0).max(100000).nullable(),
   ),
   stock: z.coerce.number().int().min(0).max(100000),
-  category: z.preprocess(emptyToNull, z.string().nullable()),
-  tags: z.preprocess(tagsPreprocess, z.array(z.string()).max(20)),
-  images: z.preprocess(imagesPreprocess, z.array(z.string().min(1, "URL inválida")).max(8)),
+  category: z.preprocess(emptyToNull, z.string().max(60).nullable()),
+  tags: z.preprocess(tagsPreprocess, z.array(z.string().max(60)).max(20)),
+  images: z.preprocess(imagesPreprocess, z.array(z.string().min(1, "URL inválida").max(500)).max(8)),
   imagesAlt: z.preprocess(
     imagesAltPreprocess,
     z.array(z.string().max(200)).max(8),

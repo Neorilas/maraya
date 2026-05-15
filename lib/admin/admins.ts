@@ -40,7 +40,7 @@ export async function getAdmins() {
 const createSchema = z.object({
   email: z.string().email("Email inválido").transform((e) => e.toLowerCase().trim()),
   name: z.string().min(1, "Nombre obligatorio").max(100),
-  password: z.string().min(6, "Mínimo 6 caracteres"),
+  password: z.string().min(8, "Mínimo 8 caracteres"),
 })
 
 export async function createAdminAction(
@@ -130,7 +130,7 @@ const TOKEN_EXPIRY_MINUTES = 30
 
 const passwordSchema = z.object({
   adminId: z.string().min(1),
-  newPassword: z.string().min(6, "Mínimo 6 caracteres"),
+  newPassword: z.string().min(8, "Mínimo 8 caracteres"),
 })
 
 export async function requestPasswordChangeAction(

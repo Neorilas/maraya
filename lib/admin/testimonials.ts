@@ -6,11 +6,11 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
 const baseSchema = {
-  author: z.string().min(1, "Obligatorio"),
-  text: z.string().min(1, "Obligatorio"),
+  author: z.string().min(1, "Obligatorio").max(100),
+  text: z.string().min(1, "Obligatorio").max(1000),
   rating: z.coerce.number().int().min(1).max(5),
-  source: z.string().optional(),
-  sourceUrl: z.string().url("URL no válida").optional().or(z.literal("")),
+  source: z.string().max(100).optional(),
+  sourceUrl: z.string().url("URL no válida").max(500).optional().or(z.literal("")),
   sortOrder: z.coerce.number().int().min(0).max(99),
   isActive: z.preprocess((v) => v === "on" || v === true, z.boolean()),
 }
