@@ -36,11 +36,11 @@ export function AddToCartButton({
   return (
     <div className={full ? "flex flex-col gap-3" : "flex items-center gap-3"}>
       <div className="inline-flex items-center bg-white border-2 border-pink-light rounded-full overflow-hidden">
-        <QtyButton onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1}>
+        <QtyButton onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={qty <= 1} aria-label="Reducir cantidad">
           <Minus className="w-3.5 h-3.5" />
         </QtyButton>
         <span className="w-8 text-center font-bold text-text-dark">{qty}</span>
-        <QtyButton onClick={() => setQty((q) => Math.min(max, q + 1))} disabled={qty >= max}>
+        <QtyButton onClick={() => setQty((q) => Math.min(max, q + 1))} disabled={qty >= max} aria-label="Aumentar cantidad">
           <Plus className="w-3.5 h-3.5" />
         </QtyButton>
       </div>
@@ -49,6 +49,7 @@ export function AddToCartButton({
         type="button"
         onClick={add}
         disabled={disabled || added}
+        aria-label={`Añadir ${item.name} al carrito`}
         className={`btn-pill btn-pink ${full ? "w-full justify-center" : ""} disabled:opacity-60`}
       >
         {added ? (

@@ -1,12 +1,36 @@
-import { Mail, Phone, MapPin, Clock, MessageCircle } from "lucide-react"
+import { Mail, Phone, MapPin, Clock, MessageCircle, ChevronDown } from "lucide-react"
 import { getSettings } from "@/lib/store/content"
 import { ContactForm } from "@/components/store/ContactForm"
+import { JsonLd, faqJsonLd } from "@/lib/store/jsonld"
 import {
   InstagramIcon,
   FacebookIcon,
   TikTokIcon,
   TwitterXIcon,
 } from "@/components/store/SocialIcons"
+
+const FAQS = [
+  {
+    question: "¿Cuánto tarda el envío?",
+    answer: "Los pedidos nacionales (España peninsular) se entregan en 2-4 días laborables. Baleares y Canarias entre 4-7 días. Envíos internacionales entre 5-10 días laborables según destino.",
+  },
+  {
+    question: "¿Puedo devolver mi bolso?",
+    answer: "Sí, aceptamos devoluciones en un plazo de 14 días naturales desde la recepción del pedido, siempre que el producto esté sin usar y en su embalaje original. Contacta con nosotros para gestionar la devolución.",
+  },
+  {
+    question: "¿Los bolsos son artesanales?",
+    answer: "Sí, cada bolso Maraya está hecho a mano con materiales seleccionados. Son piezas únicas con pequeñas variaciones que las hacen especiales e irrepetibles.",
+  },
+  {
+    question: "¿Hacéis envíos internacionales?",
+    answer: "Sí, enviamos a toda Europa, Estados Unidos y otros destinos. Los gastos de envío se calculan automáticamente en el checkout según el país de destino.",
+  },
+  {
+    question: "¿Cómo cuido mi bolso Maraya?",
+    answer: "Recomendamos guardarlo en su bolsa de tela cuando no lo uses, evitar el contacto con agua y productos químicos, y limpiarlo con un paño suave y seco. Para manchas, usa un limpiador específico para el tipo de material.",
+  },
+]
 
 export const metadata = {
   title: "Contacto",
@@ -22,6 +46,8 @@ export default async function ContactoPage() {
   const s = await getSettings()
 
   return (
+    <>
+    <JsonLd data={faqJsonLd(FAQS)} />
     <section className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       <header className="text-center mb-10">
         <h1 className="font-display italic text-3xl sm:text-4xl text-text-dark">
@@ -117,7 +143,28 @@ export default async function ContactoPage() {
         {/* Form */}
         <ContactForm />
       </div>
+
+      {/* Preguntas frecuentes */}
+      <div className="mt-12 sm:mt-16">
+        <h2 className="font-display italic text-2xl sm:text-3xl text-text-dark text-center mb-8">
+          Preguntas frecuentes
+        </h2>
+        <div className="max-w-3xl mx-auto space-y-3">
+          {FAQS.map((faq) => (
+            <details key={faq.question} className="card-maraya group">
+              <summary className="px-5 py-4 cursor-pointer flex items-center justify-between gap-3 list-none [&::-webkit-details-marker]:hidden font-semibold text-text-dark">
+                {faq.question}
+                <ChevronDown className="w-4 h-4 text-text-mid transition-transform group-open:rotate-180 shrink-0" />
+              </summary>
+              <p className="px-5 pb-4 text-sm text-text-mid leading-relaxed">
+                {faq.answer}
+              </p>
+            </details>
+          ))}
+        </div>
+      </div>
     </section>
+    </>
   )
 }
 

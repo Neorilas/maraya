@@ -15,7 +15,7 @@ export function ProductCard({ p }: { p: CatalogItem }) {
   const fresh = isNew(p.createdAt)
   const primary = p.images[0]
   const hover = p.images[1]
-  const primaryAlt = p.imagesAlt?.[0]?.trim() || p.name
+  const primaryAlt = p.imagesAlt?.[0]?.trim() || `${p.name} — bolso artesanal Maraya`
   const href = `/bolsos/${p.slug}`
 
   const badge =

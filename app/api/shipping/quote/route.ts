@@ -19,7 +19,9 @@ export async function GET(req: Request) {
   }
   try {
     const quote = await getShippingQuote(parsed.data.country, parsed.data.subtotal)
-    return NextResponse.json(quote)
+    const res = NextResponse.json(quote)
+    res.headers.set("Cache-Control", "public, max-age=300, s-maxage=600")
+    return res
   } catch (err) {
     if (err instanceof NoShippingAvailableError) {
       return NextResponse.json(
