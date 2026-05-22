@@ -43,7 +43,12 @@ export default async function ContenidoPage() {
         </p>
       </header>
 
-      <ContentSettingsForm settings={settings} />
+      <ContentSettingsForm settings={{
+        ...settings,
+        stripePublicKey: null,
+        stripeSecretKey: null,
+        stripeWebhookSecret: null,
+      }} />
       <MenuItemsEditor items={menuItems} />
       <TrustBadgesEditor badges={badges} />
       <CollectionsEditor collections={collections} categories={categories} />

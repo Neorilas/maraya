@@ -128,10 +128,14 @@ export async function saveSettingsAction(
     return { ok: false, message: "Revisa los campos marcados", errors }
   }
 
-  // Filtra undefined para evitar pisar columnas no enviadas
+  // Filtra undefined para evitar pisar columnas no enviadas.
+  // Para campos sensibles, vacío = "mantener el valor actual" (no borrar).
+  const KEEP_IF_EMPTY = new Set(["stripeSecretKey", "stripeWebhookSecret"])
   const data: Record<string, unknown> = {}
   for (const [k, v] of Object.entries(parsed.data)) {
-    if (v !== undefined) data[k] = v
+    if (v === undefined) continue
+    if (KEEP_IF_EMPTY.has(k) && v === null) continue
+    data[k] = v
   }
 
   await prisma.settings.update({ where: { id: "singleton" }, data })

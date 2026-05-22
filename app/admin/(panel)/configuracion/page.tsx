@@ -11,6 +11,12 @@ export const metadata = {
 export default async function ConfiguracionPage() {
   const settings = await getSettings()
 
+  const safeSettings = {
+    ...settings,
+    stripeSecretKey: null,
+    stripeWebhookSecret: null,
+  }
+
   return (
     <div className="space-y-6 max-w-5xl">
       <header>
@@ -23,7 +29,11 @@ export default async function ConfiguracionPage() {
         </p>
       </header>
 
-      <SettingsForm settings={settings} />
+      <SettingsForm
+        settings={safeSettings}
+        hasStripeSecretKey={!!settings.stripeSecretKey}
+        hasStripeWebhookSecret={!!settings.stripeWebhookSecret}
+      />
     </div>
   )
 }

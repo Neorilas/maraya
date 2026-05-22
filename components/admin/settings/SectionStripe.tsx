@@ -6,9 +6,13 @@ import type { StoreSettings } from "@/lib/store/content"
 export function SectionStripe({
   s,
   errors,
+  hasStripeSecretKey = false,
+  hasStripeWebhookSecret = false,
 }: {
   s: StoreSettings
   errors: Record<string, string>
+  hasStripeSecretKey?: boolean
+  hasStripeWebhookSecret?: boolean
 }) {
   return (
     <SectionCard
@@ -28,18 +32,16 @@ export function SectionStripe({
         label="Secret Key"
         name="stripeSecretKey"
         type="password"
-        defaultValue={s.stripeSecretKey ?? ""}
-        placeholder="sk_test_..."
-        hint="Solo en backend. Nunca se expone."
+        placeholder={hasStripeSecretKey ? "••••••••  (guardada)" : "sk_test_..."}
+        hint={hasStripeSecretKey ? "Clave guardada. Deja vacío para mantener la actual." : "Solo en backend. Nunca se expone."}
         error={errors.stripeSecretKey}
       />
       <Input
         label="Webhook Secret"
         name="stripeWebhookSecret"
         type="password"
-        defaultValue={s.stripeWebhookSecret ?? ""}
-        placeholder="whsec_..."
-        hint="Para verificar firmas del webhook (Step 10)."
+        placeholder={hasStripeWebhookSecret ? "••••••••  (guardada)" : "whsec_..."}
+        hint={hasStripeWebhookSecret ? "Clave guardada. Deja vacío para mantener la actual." : "Para verificar firmas del webhook."}
         error={errors.stripeWebhookSecret}
         className="sm:col-span-2"
       />

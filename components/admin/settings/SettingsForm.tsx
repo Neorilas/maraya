@@ -15,7 +15,15 @@ const initialState: SettingsFormState = { ok: false }
  * Form de /admin/configuracion: datos operativos de la tienda.
  * (Hero, top bar y brand banner se editan desde /admin/contenido.)
  */
-export function SettingsForm({ settings }: { settings: StoreSettings }) {
+export function SettingsForm({
+  settings,
+  hasStripeSecretKey = false,
+  hasStripeWebhookSecret = false,
+}: {
+  settings: StoreSettings
+  hasStripeSecretKey?: boolean
+  hasStripeWebhookSecret?: boolean
+}) {
   const [state, formAction, isPending] = useActionState(
     saveSettingsAction,
     initialState,
@@ -26,7 +34,12 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
     <form action={formAction} className="space-y-6">
       <SectionStore  s={settings} errors={errors} />
       <SectionSocial s={settings} errors={errors} />
-      <SectionStripe s={settings} errors={errors} />
+      <SectionStripe
+        s={settings}
+        errors={errors}
+        hasStripeSecretKey={hasStripeSecretKey}
+        hasStripeWebhookSecret={hasStripeWebhookSecret}
+      />
       <SectionFooter s={settings} errors={errors} />
 
       <SettingsStickyBar state={state} pending={isPending} />
