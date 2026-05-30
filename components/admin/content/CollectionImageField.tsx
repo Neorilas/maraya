@@ -4,7 +4,6 @@ import { useRef, useState } from "react"
 import Image from "next/image"
 import { UploadCloud, X, Loader2, AlertCircle, Plus } from "lucide-react"
 import { FieldShell } from "@/components/admin/forms/Field"
-import { getProductImageUploadUrl } from "@/lib/admin/uploads"
 
 type Status = "empty" | "ready" | "uploading" | "error"
 
@@ -30,22 +29,13 @@ export function CollectionImageField({
     setStatus("uploading")
     setErrMsg("")
     try {
-      const presign = await getProductImageUploadUrl({
-        filename: file.name,
-        contentType: file.type,
-        size: file.size,
-        prefix: "collections",
-      })
-      if (!presign.ok) throw new Error(presign.error)
+      const fd = new FormData()
+      fd.append("file", file)
+      const res = await fetch("/api/upload", { method: "POST", body: fd })
+      const data = await res.json()
+      if (!data.ok) throw new Error(data.error || "Error al subir imagen")
 
-      const put = await fetch(presign.uploadUrl, {
-        method: "PUT",
-        body: file,
-        headers: { "Content-Type": file.type, "x-amz-acl": "public-read" },
-      })
-      if (!put.ok) throw new Error(`Subida fallida (${put.status})`)
-
-      setUrl(presign.publicUrl)
+      setUrl(data.url)
       setStatus("ready")
     } catch (err) {
       setErrMsg(err instanceof Error ? err.message : "Error al subir")
