@@ -39,6 +39,8 @@ const baseSchema = {
   name: z.string().min(1, "Obligatorio").max(140),
   slug: z
     .string()
+    .trim()
+    .toLowerCase()
     .min(1, "Obligatorio")
     .regex(/^[a-z0-9-]+$/, "Solo minúsculas, números y guiones"),
   description: z.string().min(1, "Obligatorio").max(5000),
